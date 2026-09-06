@@ -33,6 +33,10 @@ phone → watch
 {"t":"notify","title":"…","body":"…"}
 ```
 
+Any inbound write doubles as a sync request: the watch answers every
+message with a fresh `day` push, so the phone re-asks with a bare
+`{"t":"sync"}` after reconnects and restores.
+
 ## Source of truth
 
 **The watch owns every daily aggregate.** Health Services' `STEPS_DAILY`
@@ -43,7 +47,7 @@ projected step is never counted twice, and a stale aggregate replay can only
 raise the total, never lower it. The projection updates the watch face
 instantly and the radio at most once a minute.
 
- `day` is absolute, idempotent, and
+`day` is absolute, idempotent, and
 carries the watch's own local date, so the phone never has to guess a day
 boundary from its own clock or from UTC. It is sent on subscribe, on any
 change (1s debounce), and on a 15-minute heartbeat.

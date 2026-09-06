@@ -14,7 +14,7 @@
 ## Watch capabilities (for bridge)
 - Sensors: heartrate, ecg, accelerometer, gyro, barometer, stepcounter/stepdetector, compass, light
 - Health: `healthservices` v1491535 (targetSdk 34), FitbitMobile, fitness, Health Connect controller
-- BT: `bluetooth` + `bluetooth_le` + `channel_sounding`, GATT advertiser present (empty now)
+- BT: `bluetooth` + `bluetooth_le` + `channel_sounding`, GATT advertiser present (now carrying our bridge service)
 - Node: `<watch-node>` ↔ phone `<phone-node>`, cloud route alive
 
 ## Captures in `capture/`
