@@ -1,0 +1,1733 @@
+Bluetooth Status:
+  State:         ON
+  Address:       XX:XX:XX:XX:EE:B1
+  Name:          Pixel 9
+  Inner app:     com.google.android.bluetooth
+  Uptime:        30h 31m 5.479289s
+
+Enable log:
+  TIMESTAMP          ACTION     REASON               PACKAGE              
+  ------------------ ---------- -------------------- ---------------------
+  08-31 07:37:33.421 Enable     SYSTEM_BOOT          android              
+  09-01 21:27:07.408 Disable    AIRPLANE_MODE        BluetoothSystemServer
+  09-02 06:00:50.246 Enable     AIRPLANE_MODE        android              
+  09-03 17:26:25.385 Disable    AIRPLANE_MODE        BluetoothSystemServer
+  09-03 17:26:27.286 Enable     AIRPLANE_MODE        android              
+  09-03 20:19:12.670 Disable    AIRPLANE_MODE        BluetoothSystemServer
+  09-04 07:57:27.041 Enable     AIRPLANE_MODE        android
+
+Bluetooth crashed 0 times
+
+Ble app registered: {}
+
+BluetoothManagerService:
+  mEnable:true
+  mQuietEnable:false
+  mEnableExternal:true
+  mQuietEnableExternal:false
+
+
+BluetoothAdapterProperties
+  Name: Pixel 9
+  Address: XX:XX:XX:XX:EE:B1
+  ConnectionState: STATE_CONNECTED
+  MaxConnectedAudioDevices: 5
+  A2dpOffloadEnabled: true
+  Discovering: false
+  DiscoveryEndMs: 1788532335013
+
+BluetoothRemoteDevices
+  Bonded devices: 1
+    XX:XX:XX:XX:A9:3F(Public ) => XX:XX:XX:XX:A9:3F(Public ) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: 3 LE: 3] [ACL BR/EDR:Y LE:N] [ Encryption status(BR/EDR): EncryptionStatus{keySize=16, algorithm=2] LE: N/A] Pixel Watch 4 40EW
+        [BR/EDR UUIDs]: 0000110a-0000-1000-8000-00805f9b34fb 0000110e-0000-1000-8000-00805f9b34fb 0000111e-0000-1000-8000-00805f9b34fb 0000111f-0000-1000-8000-00805f9b34fb df21fe2c-2515-4fdb-8886-f12c4d67927c
+        [Packages    ]: [com.google.android.apps.wear.companion]
+
+  Other devices: 6
+    XX:XX:XX:XX:73:6A(Public ) => XX:XX:XX:XX:XX:XX(Unknown) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: N/A LE: N/A] [ACL BR/EDR:N LE:N] [ Encryption status(BR/EDR): N/A LE: N/A] null
+    XX:XX:XX:XX:67:B3(Public ) => XX:XX:XX:XX:XX:XX(Unknown) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: N/A LE: N/A] [ACL BR/EDR:N LE:N] [ Encryption status(BR/EDR): N/A LE: N/A] null
+    XX:XX:XX:XX:83:3D(Public ) => XX:XX:XX:XX:XX:XX(Unknown) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: N/A LE: N/A] [ACL BR/EDR:N LE:N] [ Encryption status(BR/EDR): N/A LE: N/A] null
+    XX:XX:XX:XX:E5:0D(Public ) => XX:XX:XX:XX:XX:XX(Unknown) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: N/A LE: N/A] [ACL BR/EDR:N LE:N] [ Encryption status(BR/EDR): N/A LE: N/A] oraimo FreePods 4
+    XX:XX:XX:XX:FF:CE(Public ) => XX:XX:XX:XX:XX:XX(Unknown) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: N/A LE: N/A] [ACL BR/EDR:N LE:N] [ Encryption status(BR/EDR): N/A LE: N/A] oraimo FreePods 4
+    XX:XX:XX:XX:70:E4(Public ) => XX:XX:XX:XX:XX:XX(Unknown) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: N/A LE: N/A] [ACL BR/EDR:N LE:N] [ Encryption status(BR/EDR): N/A LE: N/A] oraimo FreePods 4
+
+BluetoothActiveDeviceManager
+  Audio mode: 0
+  Dual mode audio: false
+  Broadcasting: false
+  Pending active device: NULL
+  Pending classic active device: NULL
+  Classic device to be activated: NULL
+  Classic device not to be activated: NULL
+  A2DP:
+    Connected count: 0
+    Active: NULL
+    Fallback: NULL
+    Most recent: NULL
+  HFP:
+    Connected count: 1
+      XX:XX:XX:XX:A9:3F: Pixel Watch 4 40EW
+    Active: NULL
+    Fallback: NULL
+    Most recent: XX:XX:XX:XX:A9:3F: Pixel Watch 4 40EW
+  HA:
+    Connected count: 0
+    Active: 0
+    Most recent: NULL
+  LE Audio:
+    Connected count: 0
+    Active: NULL
+    Most recent: NULL
+  LE HA:
+    Connected count: 0
+    Active: NULL
+    Most recent: NULL
+
+
+BluetoothActiveDeviceManager event log:
+  09-04 17:32:25.500 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTED -> STATE_CONNECTING
+  09-04 17:32:26.247 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTING -> STATE_DISCONNECTED
+  09-04 17:32:26.258 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTED -> STATE_CONNECTING
+  09-04 17:32:27.056 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTING -> STATE_CONNECTED
+  09-04 17:32:27.402 Active Device Changed: XX:XX:XX:XX:A9:3F for profile: HEADSET
+  09-04 17:32:27.509 Active Device Changed: null for profile: HEADSET
+  09-05 05:41:18.457 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTED -> STATE_DISCONNECTING
+  09-05 05:41:18.473 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTING -> STATE_DISCONNECTED
+  09-05 06:00:03.679 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTED -> STATE_CONNECTING
+  09-05 06:00:04.463 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTING -> STATE_CONNECTED
+  09-05 06:24:39.963 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTED -> STATE_DISCONNECTING
+  09-05 06:24:39.992 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTING -> STATE_DISCONNECTED
+  09-05 06:41:09.218 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTED -> STATE_CONNECTING
+  09-05 06:41:09.558 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTING -> STATE_CONNECTED
+  09-05 06:42:04.572 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTED -> STATE_DISCONNECTING
+  09-05 06:42:04.586 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTING -> STATE_DISCONNECTED
+  09-05 06:49:02.808 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTED -> STATE_CONNECTING
+  09-05 06:49:03.313 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTING -> STATE_CONNECTED
+  09-05 06:51:51.623 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTED -> STATE_DISCONNECTING
+  09-05 06:51:51.638 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTING -> STATE_DISCONNECTED
+  09-05 06:56:16.547 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_DISCONNECTED -> STATE_CONNECTING
+  09-05 06:56:17.088 [From Service] HEADSET connection state changed: XX:XX:XX:XX:A9:3FSTATE_CONNECTING -> STATE_CONNECTED
+
+
+ScanMode: SCAN_MODE_CONNECTABLE
+Scan Mode Changes:
+  09-04 07:57:27.991 processProfileServiceStateChanged: SCAN_MODE_CONNECTABLE
+
+Enabled Profile Services:
+  GATT
+  A2DP
+  AVRCP
+  LE_AUDIO_BROADCAST_ASSISTANT
+  BATTERY
+  CSIP_SET_COORDINATOR
+  HAP_CLIENT
+  HEADSET
+  HEARING_AID
+  HID_DEVICE
+  HID_HOST
+  LE_CALL_CONTROL
+  MAP
+  MCP_SERVER
+  OPP
+  PAN
+  PBAP
+  SAP
+  VOLUME_CONTROL
+  LE_AUDIO
+  LE_AUDIO_BROADCAST
+
+LE Gatt clients controlling AutoActiveMode:
+
+BluetoothAdapterState:
+ total records=4
+  rec[0]: time=09-04 07:57:27.707 processed=Off org=Off dest=TurningBleOn what=3(0x3) BLE_TURN_ON
+  rec[1]: time=09-04 07:57:27.745 processed=TurningBleOn org=TurningBleOn dest=BleOn what=7(0x7) BLE_STARTED
+  rec[2]: time=09-04 07:57:27.749 processed=BleOn org=BleOn dest=TurningOn what=1(0x1) USER_TURN_ON
+  rec[3]: time=09-04 07:57:27.992 processed=TurningOn org=TurningOn dest=On what=5(0x5) BREDR_STARTED
+ curState=On
+
+SilenceDeviceManager:
+  Address            | Is silenced?
+  XX:XX:XX:XX:A9:3F  | false
+
+BluetoothStorageManager.EventLog:
+  09-04 17:32:22.955 XX:XX:XX:XX:A9:3F: Phonebook permission changed: null -> true
+  09-04 17:32:25.206 XX:XX:XX:XX:A9:3F: Custom metadata changed for 25
+  09-04 17:32:25.227 XX:XX:XX:XX:A9:3F: Custom metadata changed for 25
+  09-04 17:32:25.248 XX:XX:XX:XX:A9:3F: Custom metadata changed for 25
+  09-04 17:32:25.379 XX:XX:XX:XX:A9:3F: Migrated to persistent storage
+  09-04 17:32:25.393 XX:XX:XX:XX:A9:3F: HEADSET policy changed: -1 -> 100
+  09-04 17:32:26.250 XX:XX:XX:XX:A9:3F: no longer HFP active. Remains []
+  09-04 17:32:27.418 XX:XX:XX:XX:A9:3F: active HFP contains: [XX:XX:XX:XX:A9:3F]
+  09-04 17:32:27.498 XX:XX:XX:XX:A9:3F: audio policy metadata to BluetoothSinkAudioPolicy@bf95571 {mCallEstablishPolicy= 0, mConnectingTimePolicy=2, mInBandRingtonePolicy=2}
+  09-04 17:32:29.278 XX:XX:XX:XX:A9:3F: Custom metadata changed for 1
+  09-04 17:32:29.295 XX:XX:XX:XX:A9:3F: Custom metadata changed for 0
+  09-04 17:32:29.319 XX:XX:XX:XX:A9:3F: Custom metadata changed for 3
+  09-04 17:32:29.331 XX:XX:XX:XX:A9:3F: Custom metadata changed for 4
+  09-04 17:32:29.343 XX:XX:XX:XX:A9:3F: Custom metadata changed for 17
+  09-04 17:32:29.357 XX:XX:XX:XX:A9:3F: Custom metadata changed for 20
+  09-04 17:32:29.379 XX:XX:XX:XX:A9:3F: Custom metadata changed for 6
+  09-04 17:32:29.384 XX:XX:XX:XX:A9:3F: Custom metadata changed for 16
+  09-04 17:32:29.395 XX:XX:XX:XX:A9:3F: Custom metadata changed for 5
+  09-05 05:41:18.609 XX:XX:XX:XX:A9:3F: no longer HFP active. Remains []
+  09-05 06:00:04.971 XX:XX:XX:XX:A9:3F: audio policy metadata to BluetoothSinkAudioPolicy@332c3c3 {mCallEstablishPolicy= 0, mConnectingTimePolicy=2, mInBandRingtonePolicy=2}
+  09-05 06:24:40.085 XX:XX:XX:XX:A9:3F: no longer HFP active. Remains []
+  09-05 06:41:09.863 XX:XX:XX:XX:A9:3F: audio policy metadata to BluetoothSinkAudioPolicy@2d20d22 {mCallEstablishPolicy= 0, mConnectingTimePolicy=2, mInBandRingtonePolicy=2}
+  09-05 06:42:04.603 XX:XX:XX:XX:A9:3F: no longer HFP active. Remains []
+  09-05 06:49:03.936 XX:XX:XX:XX:A9:3F: audio policy metadata to BluetoothSinkAudioPolicy@6155fa3 {mCallEstablishPolicy= 0, mConnectingTimePolicy=2, mInBandRingtonePolicy=2}
+  09-05 06:51:51.674 XX:XX:XX:XX:A9:3F: no longer HFP active. Remains []
+  09-05 06:56:17.599 XX:XX:XX:XX:A9:3F: audio policy metadata to BluetoothSinkAudioPolicy@b26c482 {mCallEstablishPolicy= 0, mConnectingTimePolicy=2, mInBandRingtonePolicy=2}
+
+BluetoothStorageManager.Database:
+  active_a2dp_devices: []
+  active_hfp_devices: []
+
+  Device: XX:XX:XX:XX:A9:3F [Disk] {
+    connection_counter: 1
+    Profile Connection Policies:
+      hfp: ALLOWED
+    Permissions:
+      phonebook: true
+    HFP Client Settings:
+      in_band_ringtone: NOT_ALLOWED
+      set_active_after_connection: NOT_ALLOWED
+    Custom Metadata:
+      Key  Value                                                                                                                                                                                                                                                                                                                                                       
+      ---- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      25   <DEVICE_SETTINGS_CONFIG_PACKAGE_NAME>com.google.android.gms</DEVICE_SETTINGS_CONFIG_PACKAGE_NAME><DEVICE_SETTINGS_CONFIG_CLASS>com.google.android.gms.chimera.GmsBoundBrokerService</DEVICE_SETTINGS_CONFIG_CLASS><DEVICE_SETTINGS_CONFIG_ACTION>com.google.android.gms.fastpair.ACTION_BIND_DEVICE_SETTINGS_CONFIG_PROVIDER</DEVICE_SETTINGS_CONFIG_ACTION>
+      1    Pixel Watch 4                                                                                                                                                                                                                                                                                                                                               
+      0    Google                                                                                                                                                                                                                                                                                                                                                      
+      3    FAST_PAIR_E53DD0                                                                                                                                                                                                                                                                                                                                            
+      4    com.google.android.apps.wear.companion                                                                                                                                                                                                                                                                                                                      
+      17   Watch                                                                                                                                                                                                                                                                                                                                                       
+      20   20                                                                                                                                                                                                                                                                                                                                                          
+      6    false                                                                                                                                                                                                                                                                                                                                                       
+      16   content://com.google.android.gms.nearby.fastpair/links?address=64%3A9D%3A38%3A22%3AA9%3A3F                                                                                                                                                                                                                                                                  
+      5    content://com.google.android.gms.fileprovider/nearby_bluetooth_metadata/e53dd0main.png
+  }
+
+Profile: GattService
+  Registered App:
+    Client:
+    Server:
+      app_if: 51, appName: android.uid.bluetooth:1002, transport: AUTO
+      app_if: 52, appName: android.uid.bluetooth:1002, transport: AUTO
+      app_if: 54, appName: android.uid.bluetooth:1002, transport: AUTO
+      app_if: 60, appName: com.google.android.gms, transport: AUTO, tag: nearby_presence
+
+  GATT Advertiser Map:
+  Last Advertising:
+    09-05 14:27:06.796 
+      com.google.android.gms
+       Tag                                                : nearby_connections
+       Advertising ID                                     : 3
+        1:
+          └Start time                                     : 09-05 14:26:43.813
+          └Stop time                                      : 09-05 14:27:06.795
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 400
+          └TX POWER(dbm)                                  : 1
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : false
+          └Scannable                                      : false
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fef3-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 27]
+
+    09-05 14:27:06.797 
+      com.google.android.gms
+       Tag                                                : nearby_connections
+       Advertising ID                                     : 2
+        1:
+          └Start time                                     : 09-05 14:26:43.774
+          └Stop time                                      : 09-05 14:27:06.797
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 400
+          └TX POWER(dbm)                                  : 1
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : false
+          └Anonymous                                      : false
+          └Connectable                                    : false
+          └Scannable                                      : false
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fef3-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 92]
+
+    09-05 14:27:08.815 
+      com.google.android.gms
+       Tag                                                : nearby_connections
+       Advertising ID                                     : 2
+        1:
+          └Start time                                     : 09-05 14:27:06.799
+          └Stop time                                      : 09-05 14:27:08.814
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 160
+          └TX POWER(dbm)                                  : -7
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : false
+          └Scannable                                      : false
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fef3-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 6]
+
+    09-05 14:27:30.751 
+      com.google.android.gms
+       Tag                                                : nearby_presence
+       Advertising ID                                     : 0
+        1:
+          └Start time                                     : 09-05 14:26:49.330
+          └Stop time                                      : 09-05 14:27:30.749
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : higher than Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 160
+          └TX POWER(dbm)                                  : 1
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : true
+          └Scannable                                      : true
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fcf1-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 19]
+
+    09-05 14:27:30.865 
+      com.google.android.gms
+       Tag                                                : nearby_presence
+       Advertising ID                                     : 1
+        1:
+          └Start time                                     : 09-05 14:26:49.389
+          └Stop time                                      : 09-05 14:27:30.865
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : higher than Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 160
+          └TX POWER(dbm)                                  : 1
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : true
+          └Scannable                                      : true
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fcf1-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 20]
+
+    Total number of ongoing advertising                   : 3
+    Ongoing advertising:
+      com.google.android.gms
+       Tag                                                : nearby_presence
+       Advertising ID                                     : 0
+        1:
+          └Start time                                     : 09-05 14:27:33.875
+          └Elapsed time                                   : 58662ms
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 400
+          └TX POWER(dbm)                                  : 1
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : true
+          └Scannable                                      : true
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fcf1-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 19]
+
+      com.google.android.gms
+       Tag                                                : nearby_presence
+       Advertising ID                                     : 1
+        1:
+          └Start time                                     : 09-05 14:27:34.291
+          └Elapsed time                                   : 58246ms
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 400
+          └TX POWER(dbm)                                  : 1
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : true
+          └Scannable                                      : true
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fcf1-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 20]
+
+      com.google.android.gms
+       Tag                                                : nearby_connections
+       Advertising ID                                     : 3
+        1:
+          └Start time                                     : 09-05 14:27:06.825
+          └Elapsed time                                   : 85712ms
+          └Duration(10ms unit)                            : 0
+          └Maximum number of extended advertising events  : 0
+          └App Importance                                 : Foreground Service
+        └Advertising:
+          └Interval(0.625ms)                              : 1600
+          └TX POWER(dbm)                                  : -15
+          └Primary Phy                                    : LE_1M
+          └Secondary Phy                                  : LE_1M
+          └Legacy                                         : true
+          └Anonymous                                      : false
+          └Connectable                                    : false
+          └Scannable                                      : false
+          └Discoverable                                   : true
+          └Advertise Data:
+            └Include Device Name                          : false
+            └Include Tx Power Level                       : false
+            └Service Data(UUID, length of data)           : 
+              [0000fef3-xxxx-xxxx-xxxx-xxxxxxxxxxxx, 27]
+
+  GATT Client Map:
+    Entries: 0
+    Last apps:
+
+  GATT Server Map:
+    Entries: 4
+    Last apps:
+         AppRecord(09-04 07:57:28 ~ 09-04 07:57:30, id=57, appName=com.google.android.gms, AUTO, tag=com.google.android.gms.findmydevice, reason=REASON_UNREGISTER_SERVER)
+         AppRecord(09-04 07:57:28 ~ 09-04 12:23:53, id=58, appName=com.google.android.gms, AUTO, tag=nearby_presence, reason=REASON_UNREGISTER_SERVER)
+         AppRecord(09-04 12:23:56 ~ 09-04 17:33:32, id=59, appName=com.google.android.gms, AUTO, tag=nearby_presence, reason=REASON_UNREGISTER_SERVER)
+         AppRecord(09-04 19:00:42 ~ 09-04 19:08:23, id=61, appName=com.google.android.gms, AUTO, tag=com.google.android.gms.findmydevice, reason=REASON_UNREGISTER_SERVER)
+
+  GATT Handle Map:
+    Entries: 58
+      51: [ 90] Service 0000184c-0000-1000-8000-00805f9b34fb
+      51: [ 92]   Characteristic 00002bb3-0000-1000-8000-00805f9b34fb
+      51: [ 93]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [ 95]   Characteristic 00002bb4-0000-1000-8000-00805f9b34fb
+      51: [ 97]   Characteristic 00002bb5-0000-1000-8000-00805f9b34fb
+      51: [ 98]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [100]   Characteristic 00002bb6-0000-1000-8000-00805f9b34fb
+      51: [101]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [103]   Characteristic 00002bb9-0000-1000-8000-00805f9b34fb
+      51: [104]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [106]   Characteristic 00002bba-0000-1000-8000-00805f9b34fb
+      51: [108]   Characteristic 00002bbb-0000-1000-8000-00805f9b34fb
+      51: [109]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [111]   Characteristic 00002bbd-0000-1000-8000-00805f9b34fb
+      51: [112]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [114]   Characteristic 00002bbe-0000-1000-8000-00805f9b34fb
+      51: [115]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [117]   Characteristic 00002bbf-0000-1000-8000-00805f9b34fb
+      51: [119]   Characteristic 00002bc0-0000-1000-8000-00805f9b34fb
+      51: [120]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [122]   Characteristic 00002bc1-0000-1000-8000-00805f9b34fb
+      51: [123]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      51: [125]   Characteristic 00002bc2-0000-1000-8000-00805f9b34fb
+      51: [126]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 40] Service 00001849-0000-1000-8000-00805f9b34fb
+      52: [ 42]   Characteristic 00002b93-0000-1000-8000-00805f9b34fb
+      52: [ 43]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 45]   Characteristic 00002b96-0000-1000-8000-00805f9b34fb
+      52: [ 46]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 48]   Characteristic 00002b97-0000-1000-8000-00805f9b34fb
+      52: [ 49]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 51]   Characteristic 00002b98-0000-1000-8000-00805f9b34fb
+      52: [ 52]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 54]   Characteristic 00002b99-0000-1000-8000-00805f9b34fb
+      52: [ 55]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 57]   Characteristic 00002b9a-0000-1000-8000-00805f9b34fb
+      52: [ 58]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 60]   Characteristic 00002b9b-0000-1000-8000-00805f9b34fb
+      52: [ 61]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 63]   Characteristic 00002ba1-0000-1000-8000-00805f9b34fb
+      52: [ 64]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 66]   Characteristic 00002ba2-0000-1000-8000-00805f9b34fb
+      52: [ 68]   Characteristic 00002ba3-0000-1000-8000-00805f9b34fb
+      52: [ 69]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 71]   Characteristic 00002ba4-0000-1000-8000-00805f9b34fb
+      52: [ 72]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 74]   Characteristic 00002ba5-0000-1000-8000-00805f9b34fb
+      52: [ 75]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      52: [ 77]   Characteristic 00002bba-0000-1000-8000-00805f9b34fb
+      54: [130] Service 00001855-0000-1000-8000-00805f9b34fb
+      54: [132]   Characteristic 00002b51-0000-1000-8000-00805f9b34fb
+      60: [169] Service 0000fcf1-0000-1000-8000-00805f9b34fb
+      60: [171]   Characteristic fe2c1237-8366-4814-8eb0-01de32100bea
+      60: [172]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      60: [173] Service 0000fef3-0000-1000-8000-00805f9b34fb
+      60: [175]   Characteristic 00000100-0004-1000-8000-001a11000102
+      60: [176]     Descriptor 00002902-0000-1000-8000-00805f9b34fb
+      60: [178]   Characteristic 00000100-0004-1000-8000-001a11000101
+    Requests: 0
+Profile: A2dpService
+  mActiveDevice: null
+  mMaxConnectedAudioDevices: 5
+  codecConfigPriorities:
+    SBC: 1001
+    AAC: 2001
+    aptX: 3001
+    aptX HD: 4001
+    LDAC: 5001
+    Opus: 1501
+    UNKNOWN CODEC(7): 5002
+  mA2dpOffloadEnabled: true
+  codecConfigOffloading:
+    {codecName:SBC,mCodecType:0,mCodecPriority:0,mSampleRate:0x0(NONE),mBitsPerSample:0x0(NONE),mChannelMode:0x0(NONE),mCodecSpecific1:0,mCodecSpecific2:0,mCodecSpecific3:0,mCodecSpecific4:0}
+    {codecName:AAC,mCodecType:1,mCodecPriority:0,mSampleRate:0x0(NONE),mBitsPerSample:0x0(NONE),mChannelMode:0x0(NONE),mCodecSpecific1:0,mCodecSpecific2:0,mCodecSpecific3:0,mCodecSpecific4:0}
+    {codecName:Opus,mCodecType:6,mCodecPriority:0,mSampleRate:0x0(NONE),mBitsPerSample:0x0(NONE),mChannelMode:0x0(NONE),mCodecSpecific1:0,mCodecSpecific2:0,mCodecSpecific3:0,mCodecSpecific4:0}
+
+Profile: AvrcpTargetService
+  AVRCP version: 1.6
+  List of MediaControllers: size=0
+  List of Browsers: size=3
+    Browsable Package & Class Name: com.google.android.apps.youtube.music com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService
+
+    Browsable Package & Class Name: com.google.android.googlequicksearchbox com.google.android.libraries.assistant.auto.tng.media.mediabrowser.NewsMediaBrowserService
+
+    Browsable Package & Class Name: com.substack.app com.substack.player.PlayerService
+
+  BTAudio Active Player Events:
+
+  BTAudio Audio Playback State Events:
+    09-04 19:25:27.561 onPlaybackConfigChanged: Non-active -> Active
+    09-04 19:25:27.561 onPlaybackConfigChanged: active config: AudioPlaybackConfiguration piid:1271 deviceIds:[] type:android.media.AudioTrack u/pid:10414/4701 state:started attr:AudioAttributes: usage=USAGE_MEDIA content=CONTENT_TYPE_MOVIE flags=0xA00(FLAG_DEEP_BUFFER+FLAG_MUTE_HAPTIC)  tags= bundle=null sessionId:1113 mutedState:none  FormatInfo{isSpatialized=false, channelMask=0x0, sampleRate=0}
+    09-04 19:25:27.561 updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=388110757, actions=0, custom actions=[], active item id=-1, error=null}
+    09-04 19:25:27.927 onPlaybackConfigChanged: Active -> Non-active
+    09-04 19:25:27.927 updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=388111122, actions=0, custom actions=[], active item id=-1, error=null}
+    09-05 12:30:40.501 onPlaybackConfigChanged: Non-active -> Active
+    09-05 12:30:40.503 onPlaybackConfigChanged: active config: AudioPlaybackConfiguration piid:1295 deviceIds:[] type:android.media.AudioTrack u/pid:10414/9884 state:started attr:AudioAttributes: usage=USAGE_MEDIA content=CONTENT_TYPE_MOVIE flags=0xA00(FLAG_DEEP_BUFFER+FLAG_MUTE_HAPTIC)  tags= bundle=null sessionId:1201 mutedState:none  FormatInfo{isSpatialized=false, channelMask=0x0, sampleRate=0}
+    09-05 12:30:40.503 updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=449623699, actions=0, custom actions=[], active item id=-1, error=null}
+    09-05 12:30:56.061 onPlaybackConfigChanged: Active -> Non-active
+    09-05 12:30:56.061 updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=449639256, actions=0, custom actions=[], active item id=-1, error=null}
+    09-05 12:33:41.087 onPlaybackConfigChanged: Non-active -> Active
+    09-05 12:33:41.087 onPlaybackConfigChanged: active config: AudioPlaybackConfiguration piid:1303 deviceIds:[] type:android.media.AudioTrack u/pid:10414/9884 state:started attr:AudioAttributes: usage=USAGE_MEDIA content=CONTENT_TYPE_MOVIE flags=0xA00(FLAG_DEEP_BUFFER+FLAG_MUTE_HAPTIC)  tags= bundle=null sessionId:1201 mutedState:none  FormatInfo{isSpatialized=false, channelMask=0x0, sampleRate=0}
+    09-05 12:33:41.087 updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=449804283, actions=0, custom actions=[], active item id=-1, error=null}
+    09-05 12:33:46.339 onPlaybackConfigChanged: Active -> Non-active
+    09-05 12:33:46.339 updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=449809535, actions=0, custom actions=[], active item id=-1, error=null}
+
+  BTAudio Media Key Events:
+
+  AvrcpVolumeManager:
+    mCurrentDevice: null
+    Current System Volume: -1
+    Device Absolute Volume Map:
+    BTAudio Volume Events:
+
+
+  AvrcpCoverArtService:
+    psm = 4097
+    timages (0 / 32):
+      Handle   : Hash                              : CoverArt
+    Image bytes: 0
+    clients = []
+Profile: BassClientService
+
+
+BassClientService event log:
+
+
+Profile: BatteryService
+
+Profile: CsipSetCoordinatorService
+  mFoundSetMemberToGroupId:
+
+Profile: HapClientService
+
+Profile: HeadsetService
+  mMaxHeadsetConnections: 5
+  DefaultMaxHeadsetConnections: 5
+  mActiveDevice: null
+  isInbandRingingEnabled: false
+  isInbandRingingSupported: true
+  mInbandRingingRuntimeDisable: true
+  mAudioRouteAllowed: true
+  mVoiceRecognitionStarted: false
+  mVoiceRecognitionTimeoutEvent: null
+  mVirtualCallStarted: false
+  mDialingOutTimeoutEvent: null
+  AudioManager.isBluetoothScoOn(): false
+  Telecom.isInCall(): false
+  Telecom.isRinging(): false
+  ==== StateMachine for XX:XX:XX:XX:A9:3F ====
+    mCurrentDevice: XX:XX:XX:XX:A9:3F
+    mCurrentState: Connected
+    mPrevState: Connecting
+    mConnectionState: 2
+    mAudioState: 10
+    mNeedDialingOutReply: false
+    mSpeakerVolume: 11
+    mMicVolume: 0
+    mConnectingTimestampMs(uptimeMillis): 88154153
+    mHsClientAudioPolicy: BluetoothSinkAudioPolicy@b26c482 {mCallEstablishPolicy= 0, mConnectingTimePolicy=2, mInBandRingtonePolicy=2}
+    StateMachine: name=HeadsetStateMachine state=Connected
+    StateMachineLog:
+      HeadsetStateMachine:
+       total records=131
+        rec[0]: time=09-05 06:56:17.057 processed=Connecting org=Connecting dest=Connected what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_CONNECTION_STATE_CHANGED[1], valInt=3, valInt2=0, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[1]: time=09-05 06:56:17.122 processed=Connected org=Connected dest=<null> what=13(0xd) UNKNOWN(13): arg1=0, arg2=0, obj=null
+        rec[2]: time=09-05 06:56:17.156 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIA[20], valInt=0, valInt2=0, valString=null, valObject=HeadsetAgIndicatorEnableState[service=true, roam=true, signal=false, battery=true], device=XX:XX:XX:XX:A9:3F
+        rec[3]: time=09-05 06:56:17.474 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_NOISE_REDUCTION[9], valInt=0, valInt2=0, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[4]: time=09-05 06:56:17.533 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_UNKNOWN_AT[15], valInt=0, valInt2=0, valString=+ANDROID=?, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[5]: time=09-05 06:56:17.604 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_UNKNOWN_AT[15], valInt=0, valInt2=0, valString=+ANDROID=SINKAUDIOPOLICY,0,2,2, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[6]: time=09-05 06:56:17.651 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_AT_COPS[13], valInt=0, valInt2=0, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[7]: time=09-05 06:56:17.714 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_VOLUME_CHANGED[6], valInt=0, valInt2=11, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[8]: time=09-05 06:56:17.757 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_SUBSCRIBER_NUMBER_REQUEST[11], valInt=0, valInt2=0, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[9]: time=09-05 06:56:17.824 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=83, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[10]: time=09-05 06:56:17.861 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_AT_CLCC[14], valInt=0, valInt2=0, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[11]: time=09-05 07:10:23.479 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=82, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[12]: time=09-05 07:40:58.051 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=81, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[13]: time=09-05 08:44:47.216 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=80, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[14]: time=09-05 09:29:02.352 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=79, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[15]: time=09-05 10:18:02.541 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=78, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[16]: time=09-05 11:04:50.194 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=77, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[17]: time=09-05 12:04:51.640 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=76, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[18]: time=09-05 13:03:37.255 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=75, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+        rec[19]: time=09-05 13:52:05.164 processed=Connected org=Connected dest=<null> what=101(0x65) STACK_EVENT: arg1=0, arg2=0, obj=EVENT_TYPE_BIEV[19], valInt=2, valInt2=74, valString=null, valObject=null, device=XX:XX:XX:XX:A9:3F
+       curState=Connected
+
+Profile: HearingAidService
+
+Profile: HidDeviceService
+
+Profile: HidHostService
+  mInputDevices:
+
+Profile: TbsService
+    Ringer Mode: 0
+    Current call list:
+    Silent mode: true
+
+TbsGatt instance (CCID= 1) event log:
+  09-04 07:57:27.854 Initialized
+
+Profile: BluetoothMapService
+  mRemoteDevice: null
+  mState: 0
+  mAppObserver: com.android.bluetooth.map.BluetoothMapAppObserver@9d81a03
+  mIsWaitingAuthorization: false
+  mRemoveTimeoutMsg: false
+  mPermission: 0
+  mAccountChanged: false
+  mBluetoothMnsObexClient: null
+  mMasInstanceMap:
+    null : MasId: 0 Uri:null SMS/MMS:true
+  mEnabledAccounts:
+
+Profile: McpService
+  Media Control Service instance list:
+  MediaControlService instance current state:
+    Ccid = 2
+    Features: | PLAYER_NAME | TRACK_CHANGED | TRACK_TITLE | TRACK_DURATION | TRACK_POSITION | PLAYBACK_SPEED | SEEKING_SPEED | PLAYING_ORDER | PLAYING_ORDER_SUPPORTED | MEDIA_STATE | MEDIA_CONTROL_POINT | MEDIA_CONTROL_POINT_OPCODES_SUPPORTED | CONTENT_CONTROL_ID | PLAYER_NAME_NOTIFY | TRACK_TITLE_NOTIFY | TRACK_DURATION_NOTIFY | TRACK_POSITION_NOTIFY | PLAYBACK_SPEED_NOTIFY | SEEKING_SPEED_NOTIFY | PLAYING_ORDER_NOTIFY | MEDIA_CONTROL_POINT_OPCODES_SUPPORTED_NOTIFY
+    Player name: <>
+    CurrentPlaybackState = PAUSED
+
+MediaControlGattService instance (CCID=2): :
+  09-04 07:57:27.863 Initializing
+  09-04 07:57:27.864 initGattService: uuid= 00001849-0000-1000-8000-00805f9b34fb
+  09-04 07:57:27.876 setInitialCharacteristicValues
+  09-04 07:57:27.876 updateMediaStateChar: state= INACTIVE(0x00)
+  09-04 07:57:27.878 updatePlayerNameChar: name= ''
+  09-04 07:57:27.881 updateTrackTitleChar: title= ''
+  09-04 07:57:27.882 updateTrackDurationChar: durationMs= -1, duration= -1
+  09-04 07:57:27.883 updateTrackPositionChar: positionMs= -1, position= -1
+  09-04 07:57:27.883 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 07:57:27.888 updateSeekingSpeedChar: intSpeed=0, speed= 1.0
+  09-04 07:57:27.888 updatePlayingOrderSupportedChar: order= 1
+  09-04 07:57:27.890 updatePlayingOrderChar: order= SINGLE_ONCE
+  09-04 07:57:27.892 updateSupportedOpcodesChar: opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK)
+  09-04 11:26:36.705 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:36.705 updateTrackTitleChar: title= 'Not Provided'
+  09-04 11:26:36.706 updateTrackDurationChar: durationMs= 0, duration= 0
+  09-04 11:26:36.706 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:36.765 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:36.766 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:36.766 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:26:39.604 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:26:39.605 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:39.605 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:39.673 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:39.673 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:39.674 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:26:40.435 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:26:40.436 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:40.436 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:40.511 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:40.512 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:40.512 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:26:41.806 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:26:41.812 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:41.812 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:41.888 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:41.889 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:41.889 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:26:42.857 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:26:42.858 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:42.858 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:42.931 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:42.932 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:42.932 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:26:46.462 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:26:46.464 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:46.464 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:46.534 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:46.536 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:46.536 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:26:49.403 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:26:49.404 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:49.404 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:26:49.483 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:26:49.484 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:26:49.484 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:37:43.079 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:37:43.083 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:37:43.083 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:37:43.097 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:37:43.098 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:37:43.098 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 11:37:48.803 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 11:37:48.803 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:37:48.803 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 11:37:48.831 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 11:37:48.832 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 11:37:48.832 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:01:35.351 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:01:35.352 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:01:35.352 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:01:35.414 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:01:35.420 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:01:35.422 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:02:03.929 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:02:03.932 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:02:03.932 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:02:04.024 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:02:04.027 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:02:04.028 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:02:05.786 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:02:05.787 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:02:05.787 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:02:05.867 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:02:05.871 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:02:05.871 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:04:41.729 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:04:41.733 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:04:41.733 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:04:41.837 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:04:41.839 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:04:41.839 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:04:41.859 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:04:41.860 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:04:41.860 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:04:41.904 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:04:41.916 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:04:41.916 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:05:19.200 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:05:19.200 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:05:19.200 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:05:19.298 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:05:19.299 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:05:19.300 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:05:19.584 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:05:19.585 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:05:19.585 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:05:19.623 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:05:19.625 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:05:19.625 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:05:25.064 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:05:25.064 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:05:25.064 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:05:39.759 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:05:39.761 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:05:39.764 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:21:17.948 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:21:17.950 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:21:17.950 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:21:27.020 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:21:27.026 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:21:27.026 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:49:58.541 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:49:58.543 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:49:58.543 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:50:18.572 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:50:18.573 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:50:18.573 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:50:19.051 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:50:19.052 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:50:19.052 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:50:19.395 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:50:19.397 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:50:19.397 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:50:21.205 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:50:21.208 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:50:21.209 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:50:45.636 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:50:45.637 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:50:45.637 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:51:46.021 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:51:46.023 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:51:46.023 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:52:09.631 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:52:09.636 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:52:09.636 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 18:52:13.938 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 18:52:13.940 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:52:13.940 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 18:54:23.932 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 18:54:23.932 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 18:54:23.933 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 19:24:00.177 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 19:24:00.178 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:24:00.178 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 19:24:03.139 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 19:24:03.139 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:24:03.140 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 19:24:03.256 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 19:24:03.258 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:24:03.258 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 19:24:11.072 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 19:24:11.085 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:24:11.085 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 19:24:11.278 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 19:24:11.279 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:24:11.279 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 19:25:27.104 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 19:25:27.107 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:25:27.107 updateMediaStateChar: state= PAUSED(0x02)
+  09-04 19:25:27.562 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-04 19:25:27.564 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:25:27.564 updateMediaStateChar: state= PLAYING(0x01)
+  09-04 19:25:27.930 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-04 19:25:27.936 updateTrackPositionChar: positionMs= 0, position= 0
+  09-04 19:25:27.936 updateMediaStateChar: state= PAUSED(0x02)
+  09-05 12:30:40.512 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-05 12:30:40.513 updateTrackPositionChar: positionMs= 0, position= 0
+  09-05 12:30:40.513 updateMediaStateChar: state= PLAYING(0x01)
+  09-05 12:30:56.066 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-05 12:30:56.068 updateTrackPositionChar: positionMs= 0, position= 0
+  09-05 12:30:56.068 updateMediaStateChar: state= PAUSED(0x02)
+  09-05 12:33:41.089 updatePlaybackSpeedChar: intSpeed=0, speed= 1.0
+  09-05 12:33:41.091 updateTrackPositionChar: positionMs= 0, position= 0
+  09-05 12:33:41.091 updateMediaStateChar: state= PLAYING(0x01)
+  09-05 12:33:46.368 updatePlaybackSpeedChar: intSpeed=-128, speed= 0.0
+  09-05 12:33:46.373 updateTrackPositionChar: positionMs= 0, position= 0
+  09-05 12:33:46.373 updateMediaStateChar: state= PAUSED(0x02)
+
+MediaControlProfile:
+  09-04 18:04:41.727 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:04:41.831 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:04:41.831 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:04:41.832 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:04:41.854 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:04:41.854 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:04:41.854 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:04:41.902 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:04:41.903 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:04:41.903 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:05:19.199 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:05:19.199 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:05:19.199 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:05:19.296 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:05:19.296 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:05:19.296 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:05:19.583 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:05:19.583 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:05:19.583 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:05:19.619 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:05:19.619 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:05:19.620 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:05:25.055 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:05:25.055 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:05:25.062 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:05:39.749 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:05:39.749 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:05:39.749 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:21:17.943 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:21:17.943 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:21:17.946 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:21:27.013 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:21:27.013 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:21:27.013 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:49:58.540 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:49:58.540 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:49:58.540 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:50:18.570 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:50:18.570 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:50:18.570 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:50:19.048 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:50:19.048 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:50:19.048 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:50:19.393 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:50:19.393 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:50:19.393 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:50:21.200 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:50:21.200 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:50:21.200 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:50:45.633 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:50:45.634 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:50:45.634 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:51:46.019 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:51:46.019 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:51:46.019 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:52:09.630 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:52:09.630 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:52:09.630 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:52:13.936 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:52:13.936 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:52:13.936 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 18:54:23.928 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 18:54:23.928 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 18:54:23.928 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:24:00.175 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:24:00.175 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:24:00.175 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:24:03.137 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:24:03.137 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:24:03.137 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:24:03.253 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:24:03.253 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:24:03.253 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:24:11.065 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:24:11.065 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:24:11.065 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:24:11.276 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:24:11.276 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:24:11.276 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:25:27.100 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:25:27.100 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:25:27.100 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:25:27.561 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:25:27.561 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:25:27.562 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-04 19:25:27.927 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-04 19:25:27.927 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-04 19:25:27.927 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-05 12:30:40.508 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-05 12:30:40.509 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-05 12:30:40.509 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-05 12:30:56.061 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-05 12:30:56.061 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-05 12:30:56.061 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-05 12:33:41.088 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-05 12:33:41.088 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-05 12:33:41.088 onCurrentPlayerStateUpdated state= PLAYING, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+  09-05 12:33:46.340 onMediaUpdated: track_changed=false state_changed=true queue_changed=false
+  09-05 12:33:46.340 onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+  09-05 12:33:46.352 onCurrentPlayerStateUpdated state= PAUSED, supported opcodes= 0x181f (PLAY | PAUSE | FAST_REWIND | FAST_FORWARD | STOP | PREVIOUS_TRACK | NEXT_TRACK), track position= 0 (0)
+
+
+Profile: BluetoothOppService
+
+Profile: PanService
+  mMaxPanDevices: 5
+  mPanIfName: bt-pan
+  mTetherOn: false
+  mPanDevices:
+
+Profile: BluetoothPbapService
+
+Profile: SapService
+
+Profile: VolumeControlService
+  StreamType: 3
+  Group volumes {GroupId={VolumeControlStreamType=Volume}}: {}
+  Group mute states {GroupId={VolumeControlStreamType=Mute}}: {}
+  Device volumes {Device={VolumeControlStreamType=Volume}}: {}
+  Device mute states {Device={VolumeControlStreamType=Mute}}: {}
+
+Profile: LeAudioService
+  isDualModeAudioEnabled: false
+  Active Groups information:
+    currentlyActiveGroupId: -1
+    mActiveAudioOutDevice: null
+    mActiveAudioInDevice: null
+    mBroadcastToUnicastFallbackGroup: -1
+    mUnicastGroupIdDeactivatedForBroadcastTransition: -1
+    mBroadcastIdDeactivatedForUnicastTransition: Optional.empty
+    game mode not active
+    mExposedActiveDevice: null
+    mHfpHandoverDevice:null
+    mLeAudioDeviceInactivatedForHfpHandover:null
+    mLeAudioIsInbandRingtoneSupported:true
+
+
+LeAudioService event log:
+  09-04 17:32:27.073 [From Native]: groupId: -1, status: Inactive
+
+Profile: LeAudioBroadcast
+
+LE Scanner:
+
+LE Scanner Map:
+  Entries: 3
+  com.google.android.gms:
+    LE scans               (Started/Stopped)                                   : 147 / 147
+    Scan time(ms)          (Active/Suspend/Total)                              : 55768916 / 0 / 55768916
+    Scan time per mode(ms) (Opp/LowPower/Balanced/LowLatency/AmbientDiscovery) : 427530 / 34512431 / 6501341 / 250825 / 14076789
+    Scan mode counter      (Opp/LowPower/Balanced/LowLatency/AmbientDiscovery) : 1 / 13 / 58 / 30 / 45
+    Score                                                                      : 8846600
+    Number of results      (ScreenOff/ScreenOn/Total)                          : 53 / 245 / 298
+    Number of batch alarms scheduled                                           : 47
+    Current Consumption Severities:
+      WINDOW(H) SEVERITY AVG/HR TOTAL
+      --------- -------- ------ -----
+      1         NORMAL   18     18   
+      4         NORMAL   7      30   
+      8         NORMAL   3      30
+    Last 5 scans:
+      [09-05 14:26:45.059 --> 09-05 14:27:06.687] (Duration: 21628ms)
+        └ Info: (Filter) Results: (0 / 0 / 0) | id: (1) | [nearby_fast_pair] | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE CALLBACK_TYPE RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- ------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          BALANCED  ALL_MATCHES   FULL        0        AGGRESSIVE FEW         false  1M  -128 ACTIVE
+        └ Filter: [ ServiceDataUuid=0000feaa-0000-1000-8000-00805f9b34fb ServiceData=[64] ServiceDataMask=[-16] ]
+        └ Filter: [ ServiceDataUuid=0000fff6-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+        └ Filter: [ ServiceDataUuid=0000fe2c-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+      [09-05 14:26:49.387 --> 09-05 14:27:06.740] (Duration: 17353ms)
+        └ Info: (Filter) Results: (0 / 0 / 0) | id: (3) | [nearby_sharing] | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE         CALLBACK_TYPE RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          ----------------- ------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          AMBIENT_DISCOVERY ALL_MATCHES   FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ ServiceDataUuid=0000fe2c-0000-1000-8000-00805f9b34fb ServiceData=[-4, 18, -114] ]
+        └ Filter: [ ServiceUuid=0000fe2c-0000-1000-8000-00805f9b34fb ]
+      [09-05 14:26:43.347 --> 09-05 14:27:06.783] (Duration: 23436ms)
+        └ Info: (Filter) Results: (0 / 0 / 0) | id: (2) | [nearby_connections] | CB Regular Scan
+        └ App Importance: Foreground Service
+          SCAN_MODE         CALLBACK_TYPE RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          ----------------- ------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          AMBIENT_DISCOVERY ALL_MATCHES   FULL        0        AGGRESSIVE FEW         false  1M  -128 ACTIVE
+        └ Filter: [ ServiceUuid=0000fef3-0000-1000-8000-00805f9b34fb ]
+        └ Filter: [ ServiceDataUuid=0000fc73-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+        └ Filter: [ ServiceDataUuid=0000fef3-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+      [09-05 14:27:07.634 --> 09-05 14:27:13.669] (Duration: 6035ms)
+        └ Info: (Filter) Results: (0 / 0 / 0) | id: (1) | [nearby_fast_pair] | CB Regular Scan
+        └ App Importance: Foreground Service
+          SCAN_MODE   CALLBACK_TYPE RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          ----------- ------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_LATENCY ALL_MATCHES   FULL        0        AGGRESSIVE FEW         false  1M  -128 ACTIVE
+        └ Filter: [ ServiceDataUuid=0000feaa-0000-1000-8000-00805f9b34fb ServiceData=[64] ServiceDataMask=[-16] ]
+        └ Filter: [ ServiceDataUuid=0000fff6-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+        └ Filter: [ ServiceDataUuid=0000fe2c-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+      [09-05 14:27:13.680 --> 09-05 14:27:18.107] (Duration: 4427ms)
+        └ Info: (Filter) Results: (0 / 0 / 0) | id: (1) | [nearby_fast_pair] | CB Regular Scan
+        └ App Importance: Foreground Service
+          SCAN_MODE CALLBACK_TYPE RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- ------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          BALANCED  ALL_MATCHES   FULL        0        AGGRESSIVE FEW         false  1M  -128 ACTIVE
+        └ Filter: [ ServiceDataUuid=0000feaa-0000-1000-8000-00805f9b34fb ServiceData=[64] ServiceDataMask=[-16] ]
+        └ Filter: [ ServiceDataUuid=0000fff6-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+        └ Filter: [ ServiceDataUuid=0000fe2c-0000-1000-8000-00805f9b34fb ServiceData=[0] ServiceDataMask=[0] ]
+  com.android.companiondevicemanager:
+    LE scans               (Started/Stopped)                                   : 1 / 1
+    Scan time(ms)          (Active/Suspend/Total)                              : 1556 / 0 / 1556
+    Scan time per mode(ms) (Opp/LowPower/Balanced/LowLatency/AmbientDiscovery) : 0 / 0 / 0 / 1556 / 0
+    Scan mode counter      (Opp/LowPower/Balanced/LowLatency/AmbientDiscovery) : 0 / 0 / 0 / 1 / 0
+    Score                                                                      : 1556
+    Number of results      (ScreenOff/ScreenOn/Total)                          : 0 / 1 / 1
+    Current Consumption Severities:
+      WINDOW(H) SEVERITY AVG/HR TOTAL
+      --------- -------- ------ -----
+      1         NORMAL   0      0    
+      4         NORMAL   0      0    
+      8         NORMAL   0      0
+    Last 1 scans:
+      [09-04 17:32:13.308 --> 09-04 17:32:14.864] (Duration: 1556ms)
+        └ Info: (Filter) Results: (0 / 1 / 1) | id: (3) | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE   CALLBACK_TYPE RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          ----------- ------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_LATENCY ALL_MATCHES   FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ ManufacturerId=224 ManufacturerData=[0, 20, 0, 0, 0, 0, -128] ManufacturerDataMask=[0, -1, 0, 0, 0, 0, -1] ]
+        └ Filter: [ ManufacturerId=224 ManufacturerData=[0, 20, 0, 0, 0, 0, -127] ManufacturerDataMask=[0, -1, 0, 0, 0, 0, -1] ]
+        └ Filter: [ ManufacturerId=224 ManufacturerData=[0, 19, 0, 0, 0, 0, -128] ManufacturerDataMask=[0, -1, 0, 0, 0, 0, -1] ]
+        └ Filter: [ ManufacturerId=224 ManufacturerData=[0, 19, 0, 0, 0, 0, -127] ManufacturerDataMask=[0, -1, 0, 0, 0, 0, -1] ]
+  android.uid.system:1000:
+    LE scans               (Started/Stopped)                                   : 7 / 7
+    Scan time(ms)          (Active/Suspend/Total)                              : 47993497 / 0 / 47993497
+    Scan time per mode(ms) (Opp/LowPower/Balanced/LowLatency/AmbientDiscovery) : 0 / 47993497 / 0 / 0 / 0
+    Scan mode counter      (Opp/LowPower/Balanced/LowLatency/AmbientDiscovery) : 0 / 7 / 0 / 0 / 0
+    Score                                                                      : 4799349
+    Number of results      (ScreenOff/ScreenOn/Total)                          : 0 / 0 / 0
+    Current Consumption Severities:
+      WINDOW(H) SEVERITY AVG/HR TOTAL
+      --------- -------- ------ -----
+      1         NORMAL   0      0    
+      4         NORMAL   0      0    
+      8         NORMAL   0      0
+    Last 5 scans:
+      [09-04 17:34:55.049 --> 09-04 17:35:21.332] (Duration: 26283ms)
+        └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (3) | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+      [09-04 17:35:21.377 --> 09-04 17:35:26.858] (Duration: 5481ms)
+        └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (3) | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+      [09-04 17:35:26.877 --> 09-05 06:41:05.814] (Duration: 47138937ms)
+        └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (3) | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+      [09-05 06:42:04.717 --> 09-05 06:48:58.753] (Duration: 414036ms)
+        └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (1) | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+      [09-05 06:51:51.715 --> 09-05 06:56:12.709] (Duration: 260994ms)
+        └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (1) | CB Regular Scan
+        └ App Importance: Higher than Foreground Service
+          SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
+          --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
+          LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
+        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+
+Native:
+  hci_instance_name: default
+
+Connection Events:
+  09-04 17:32:33.975 DISCONNECTED xx:xx:xx:xx:a9:3f reason=22
+  09-04 17:32:25.067 CONNECTED    xx:xx:xx:xx:a9:3f
+
+Bond Events:
+  Total Number of events: 6
+  Time          address            Function             State
+  17:32:15.032  xx:xx:xx:xx:a9:3f  btif_dm_create_bond  BT_BOND_STATE_NONE(0x0)
+  17:32:15.033  xx:xx:xx:xx:a9:3f  bond_state_changed   BT_BOND_STATE_BONDING(0x1)
+  17:32:17.522  xx:xx:xx:xx:a9:3f  bond_state_changed   BT_BOND_STATE_BONDING(0x1)
+  17:32:24.095  xx:xx:xx:xx:a9:3f  bond_state_changed   BT_BOND_STATE_BONDED(0x2)
+  17:32:24.755  xx:xx:xx:xx:a9:3f  bond_state_changed   BT_BOND_STATE_BONDING(0x1)
+  17:32:24.853  xx:xx:xx:xx:a9:3f  bond_state_changed   BT_BOND_STATE_BONDED(0x2)
+
+Link Key Types:
+  xx:xx:xx:xx:a9:3f
+    BR: AUTH_COMB_P_256
+    LE: LE_KEY_PENC LE_KEY_PID LE_KEY_LENC LE_KEY_LCSRK LE_KEY_LID
+
+AVRCP Controller Native State:
+  Devices (0 / 5):
+
+A2DP State:
+  TxQueue:
+  Counts (enqueue/dequeue/readbuf)                        : 0 / 0 / 0
+  Last update time ago in ms (enqueue/dequeue/readbuf)    : 0 / 0 / 0
+  Frames per packet (total/max/ave)                       : 0 / 0 / 0
+  Counts (flushed/dropped/dropouts)                       : 0 / 0 / 0
+  Counts (max dropped)                                    : 0
+  Last update time ago in ms (flushed/dropped)            : 0 / 0
+  Counts (underflow)                                      : 0
+  Bytes (underflow)                                       : 0
+  Last update time ago in ms (underflow)                  : 0
+  Enqueue deviation counts (overdue/premature)            : 0 / 0
+  Enqueue overdue scheduling time in ms (total/max/ave)   : 0 / 0 / 0
+  Enqueue premature scheduling time in ms (total/max/ave) : 0 / 0 / 0
+  Dequeue deviation counts (overdue/premature)            : 0 / 0
+  Dequeue overdue scheduling time in ms (total/max/ave)   : 0 / 0 / 0
+  Dequeue premature scheduling time in ms (total/max/ave) : 0 / 0 / 0
+
+A2DP Peers State:
+  Source: active peer: null
+  Sink: active peer: null
+
+A2DP Source State: Enabled
+  Active peer: 00:00:00:00:00:00
+  Peers:
+
+A2DP Sink State: Disabled
+
+BTA AV State:
+  State Machine State: INIT
+  SDP A2DP source handle: 65539
+  SDP A2DP sink handle: 0
+  Features: 0x865b
+  SDP handle: 0
+  Disabling: false
+  SCO occupied: false
+  Connected audio channels: 0
+  Connected audio channels mask: 0x0
+  Registered audio channels mask: 0x3f
+  Connected LCBs mask: 0x0
+  Offload start pending handle: 0
+  Offload started handle: 0
+
+AVDTP Stack State:
+  AVDTP signalling L2CAP channel MTU: 672
+
+Socket Events:
+  Time        	Address          	State             	Role              	Channel   	Type     	ServerName
+  06:52:32.486	xx:xx:xx:xx:a9:3f	STATE_DISCONNECTED   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:55:17.531	xx:xx:xx:xx:a9:3f	STATE_CONNECTING   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:55:22.841	xx:xx:xx:xx:a9:3f	STATE_DISCONNECTED   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:55:27.634	xx:xx:xx:xx:a9:3f	STATE_CONNECTING   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:55:32.948	xx:xx:xx:xx:a9:3f	STATE_DISCONNECTED   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:55:33.970	xx:xx:xx:xx:a9:3f	STATE_CONNECTING   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:55:39.423	xx:xx:xx:xx:a9:3f	STATE_DISCONNECTED   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:56:11.680	xx:xx:xx:xx:a9:3f	STATE_CONNECTING   	ROLE_CONNECTION      	-1         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:56:13.403	xx:xx:xx:xx:a9:3f	STATE_CONNECTED   	ROLE_CONNECTION      	7         	RFCOMM	5e8945b0-9525-11e3-a5e2-0800200c9a66
+  06:56:16.426	xx:xx:xx:xx:a9:3f	STATE_CONNECTED   	ROLE_CONNECTION      	21         	RFCOMM	Flow15
+  07:58:30.520	00:00:00:00:00:00	STATE_DISCONNECTED   	ROLE_LISTEN      	12         	RFCOMM	NearbySharing
+  07:58:30.615	00:00:00:00:00:00	STATE_LISTENING   	ROLE_LISTEN      	-1         	RFCOMM	NearbySharing
+  07:58:30.617	00:00:00:00:00:00	STATE_LISTENING   	ROLE_LISTEN      	13         	RFCOMM	NearbySharing
+  11:14:01.154	00:00:00:00:00:00	STATE_DISCONNECTED   	ROLE_LISTEN      	13         	RFCOMM	NearbySharing
+  11:14:01.242	00:00:00:00:00:00	STATE_LISTENING   	ROLE_LISTEN      	-1         	RFCOMM	NearbySharing
+  11:14:01.244	00:00:00:00:00:00	STATE_LISTENING   	ROLE_LISTEN      	14         	RFCOMM	NearbySharing
+
+
+AVRCP Target Native Service: 0 devices
+stack::gatt    last 4 tcb state transitions:
+stack::gatt    2026-09-04 17:32:25.067 xx:xx:xx:xx:a9:3f, BT_TRANSPORT_LE, state: GATT_CH_OPEN, No ACL holders
+stack::gatt    2026-09-04 17:32:25.067 xx:xx:xx:xx:a9:3f, BT_TRANSPORT_LE, state: GATT_CH_OPEN, ACL holders gatt_if: bta_dm_disc_gatt (44), 
+stack::gatt    2026-09-04 17:32:26.331 xx:xx:xx:xx:a9:3f, BT_TRANSPORT_LE, state: GATT_CH_OPEN, No ACL holders
+stack::gatt    2026-09-04 17:32:33.975 xx:xx:xx:xx:a9:3f, BT_TRANSPORT_LE, state: GATT_CH_CLOSE, No ACL holders
+TCB (GATT_MAX_PHY_CHANNEL: 8) in_use: 0
+
+GATT offload sessions
+Number of active offload sessions: 0
+
+BTA_GATTC_CB state BTA_GATTC_STATE_ENABLED
+ ->conn_track (GATT_MAX_PHY_CHANNEL=16)
+  -- used: 0
+ ->bg_track (BTA_GATTC_KNOWN_SR_MAX=255)
+  -- used: 0
+ ->cl_rcb (dynamic)
+  client_if: 56  app uuids: 64a92852-2532-5d13-b711-563d383682b2  clcb_num: 0
+  client_if: 53  app uuids: 377da15f-a7e3-d43a-9bfd-c1ca8492818a  clcb_num: 0
+  client_if: 50  app uuids: c75b790d-7087-fee9-5a3e-db17abd14f89  clcb_num: 0
+  client_if: 48  app uuids: 8367d32b-906d-dbf8-1e43-31b9bea20cf0  clcb_num: 0
+  client_if: 47  app uuids: 5d4c25c4-06af-0d85-1635-a0b8bfa0868c  clcb_num: 0
+  client_if: 46  app uuids: f7299e5a-b8d7-57a9-4ec0-ccb49055f66e  clcb_num: 0
+  client_if: 49  app uuids: 71e31380-bbb8-c1bb-2eb2-a6ff7988371e  clcb_num: 0
+  client_if: 44  app uuids: 38a7c1e4-4397-67c0-7c6a-4550b9dd8c8f  clcb_num: 0
+  -- used: 8
+ ->clcb (dynamic)
+  -- used: 0
+ ->known_server (BTA_GATTC_KNOWN_SR_MAX=255)
+  -- used: 0
+
+
+Bluetooth Iot Config:
+  Config Source: Original file
+  Devices loaded: 5
+  File created/tagged: 2026-06-15 04:58:17
+
+Bluetooth HF Client BTA Statistics
+
+Bluetooth Wakelock Statistics:
+  Is acquired                    : false
+  Acquired/released count        : 785 / 785
+  Acquired/released error count  : 0 / 0
+  Last acquire/release error code: 0 / 0
+  Last acquired time (ms)        : 1000
+  Acquired time min/max/avg (ms) : 0 / 3587 / 1041
+  Total acquired time (ms)       : 817628
+  Total run time (ms)            : 75376050
+
+Bluetooth Alarms Statistics:
+  Total Alarms: 0
+
+Coordinated Set Service Client:
+  APP ID: 47
+  Groups:
+
+Hearing Access Service Client:
+ APP ID: 48
+  "No known HAS devices"
+
+Hearing Aid Manager:
+  Hearing Aid Audio HAL:
+    Counts (underflow)                                      : 0
+    Bytes (underflow)                                       : 0
+    Last update time ago in ms (underflow)                  : 0
+
+Device Groups Manager:
+  Num. registered clients: 3
+  Groups:
+GmapServer is enabled: 1
+GmapServer Role: 00000001, UGG Feature: 00000111
+AudioContextTypeManager:
+ IsInCall: false, IsInVoip: false, IsInGame: false
+ local_encoding_contexts_types_.source: 0x0000
+ local_encoding_contexts_types_.sink: 0x0000
+ local_decoding_context_types_(sink): 0x0000
+
+LeAudio Manager:
+  Active group (gID): -1
+  GATT App ID: 56
+  TBS state: No calls
+  Game mode: Disabled
+  Reconnection mode: Targeted Announcements
+  Current scenario: UNINIT (000000)
+  Playback metadata context type mask: 0x0000
+  Recording metadata context type mask: 0x0000
+  Playback monitor mode: false
+  Recording monitor mode: false
+  Codec location: ADSP (codec extensibility) 
+  AF playback codec config:
+    audio sender state: IDLE
+    sample rate: 48000, chan: 2, bits: 16, data_interval_us: 10000
+  AF recording codec config:
+    audio receiver state: IDLE
+    sample rate: 16000, chan: 2, bits: 16, data_interval_us: 10000
+  Stream creation speed: 
+  AudioDev active speed: 
+  == Active Groups:
+  == Inactive Groups:
+
+   Not grouped devices:
+  LeAudioHealthStats:
+    groups:
+    devices:
+  LE AudioHalClient:
+    Counts (underflow)                                      : 0
+    Bytes (underflow)                                       : 0
+    Last update time ago in ms (underflow)                  : 0
+  ----------------
+  ISO Manager:
+    Available credits: 24
+    Controller buffer size: 1396
+    CIGs:
+    BIGs (Source):
+    BIGs (Sink):
+  ----------------
+ ----- ::le_audio -----
+::le_audio  2026-09-04 07:57:27.913 Initialized le_audio history
+
+Le Audio Broadcaster:
+    Number of broadcasts: 0
+
+Volume Control Manager:
+APP ID: 53
+  No VC devices:
+
+Volume Control Profile (VCP) Renderer:
+  Not initialized
+
+VAP Server Manager:
+    VA Name: 
+    VA Session State: VA_SESSION_RESET
+    VAP CCID: 0
+    VA Supported Features: 0
+    VAP GATT Server IF: 0
+
+
+connection_manager state:
+    no Low Energy connection attempts
+
+BT Quality Report Events:
+Event queue is empty.
+ ----- stack::avct -----
+stack::avct  Id: 0 profile_uuid:0x110e role:AVCT_ROLE_ACCEPTOR control:0x47
+stack::avct   Link  : No link channel
+stack::avct   Browse: No browse channel
+ ----- shim::legacy::pan -----
+shim::legacy::pan Connections:0 roles configured:C.N[0x5] current:...[0x0] previous:...[0x0]
+shim::legacy::pan service_name_user:"Android Network User"
+shim::legacy::pan service_name_nap:"Android Network Access Point"
+ ----- shim::legacy::hid -----
+shim::legacy::hid status:BTIF_HH_ENABLED num_devices:0
+shim::legacy::hid status:BTIF_HH_ENABLED
+ ----- BR/EDR HID host -----
+BR/EDR HID host Registered:true, SDP busy:false
+ ----- shim::legacy::bta::dm -----
+shim::legacy::bta::dm  last 5 discovery state transitions
+shim::legacy::bta::dm    2026-09-04 17:32:24.095 state:BTA_DM_DISCOVER_IDLE      event:BTA_DM_API_DISCOVER_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:24.853 state:BTA_DM_DISCOVER_ACTIVE    event:BTA_DM_API_DISCOVER_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:25.328 state:BTA_DM_DISCOVER_ACTIVE    event:BTA_DM_DISCOVERY_RESULT_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:25.376 state:BTA_DM_DISCOVER_ACTIVE    event:BTA_DM_DISCOVERY_RESULT_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:26.330 state:BTA_DM_DISCOVER_IDLE      event:BTA_DM_DISC_CLOSE_TOUT_EVT
+shim::legacy::bta::dm  current bta_dm_discovery_state:BTA_DM_DISCOVER_IDLE
+shim::legacy::bta::dm  last 6 search state transitions
+shim::legacy::bta::dm    2026-09-04 17:32:13.288 state:BTA_DM_SEARCH_IDLE        event:BTA_DM_API_SEARCH_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:14.862 state:BTA_DM_SEARCH_ACTIVE      event:BTA_DM_API_SEARCH_CANCEL_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:14.992 state:BTA_DM_SEARCH_IDLE        event:BTA_DM_API_SEARCH_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:14.993 state:BTA_DM_SEARCH_ACTIVE      event:BTA_DM_API_SEARCH_CANCEL_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:15.018 state:BTA_DM_SEARCH_IDLE        event:BTA_DM_API_SEARCH_CANCEL_EVT
+shim::legacy::bta::dm    2026-09-04 17:32:24.095 state:BTA_DM_SEARCH_IDLE        event:BTA_DM_API_SEARCH_CANCEL_EVT
+shim::legacy::bta::dm  current bta_dm_search_state:BTA_DM_SEARCH_IDLE
+shim::legacy::bta::dm  last 0 gatt history entries
+shim::legacy::bta::dm::sniff_offload  sniff offload started state: is_started:false status_code:0
+shim::legacy::bta::dm::sniff_offload  last 0 sniff offload parameters writes
+ ----- shim::legacy::sdp -----
+shim::legacy::sdp max_attribute_list_size:1008 max_records_per_search:21
+shim::legacy::sdp peer:xx:xx:xx:xx:a9:3f discovery_state:SDP_DISC_WAIT_SEARCH_ATTR
+shim::legacy::sdp   connection_state:tSDP_STATE::IDLE(0x0) connection_flags:0x01 mtu:1024 l2cap_cid:123
+shim::legacy::sdp peer:xx:xx:xx:xx:a9:3f discovery_state:SDP_DISC_WAIT_SEARCH_ATTR
+shim::legacy::sdp   connection_state:tSDP_STATE::IDLE(0x0) connection_flags:0x01 mtu:0 l2cap_cid:80
+shim::legacy::sdp peer:xx:xx:xx:xx:a9:3f discovery_state:SDP_DISC_WAIT_CONN
+shim::legacy::sdp   connection_state:tSDP_STATE::IDLE(0x0) connection_flags:0x00 mtu:1024 l2cap_cid:70
+shim::record 001 xx:xx:xx:xx:a9:3f DUAL   cod:0-1f-0 remote_info:14-08714-00015 sm4:0x11 SecureConn:T name:"Pixel Watch 4 40EW" sec_prop:bredr_linkkey_known:T,le_linkkey_known:T,bond_type:BOND_TYPE_PERSISTENT,bredr_linkkey_type:AUTH_COMB_P_256,ble_enc_key_size:16,le_enc_key_size:0,bredr_authenticated:T,le_authenticated:F,16_digit_key_authenticated:T,bredr_encrypted:T,le_encrypted:F, pairing_algorithm:PairingAlgorithm::SC(0x4), ble_pairing_algorithm:PairingAlgorithm::SC(0x4), in_resolving_list: T
+ ----- shim::legacy::l2cap -----
+shim::legacy::l2cap link_state:LST_CONNECTED(0x4)
+shim::legacy::l2cap handle:0x000b
+shim::legacy::l2cap   active channel lcid:0x0079 rcid:0x0062 is_ecoc:false in_use:true
+ ----- shim::btm -----
+shim::btm  2026-09-05 12:44:58.112 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 12:47:08.043 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 12:52:01.769 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 12:55:54.133 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 12:59:45.477 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:03:36.744 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:07:28.216 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:09:33.790 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:12:29.638 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:13:25.955 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:13:31.132 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:13:35.069 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:13:40.035 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:15:25.167 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:15:25.167 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:15:25.167 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:16:04.130 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:38.963 results:6  
+shim::btm  2026-09-05 13:16:20.615 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:20:12.056 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:20:27.245 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:20:27.245 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:20:27.245 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:20:28.509 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:20:28.539 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:20:28.763 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-309
+shim::btm  2026-09-05 13:20:28.821 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:20:28.880 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-310
+shim::btm  2026-09-05 13:20:28.979 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 13:20:28.985 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-311
+shim::btm  2026-09-05 13:20:29.069 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-312
+shim::btm  2026-09-05 13:20:29.083 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-313
+shim::btm  2026-09-05 13:20:30.997 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 13:20:37.429 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:20:37.429 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:10.184 results:8  
+shim::btm  2026-09-05 13:20:37.429 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:20:37.430 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:20:37.501 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-314
+shim::btm  2026-09-05 13:20:37.541 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-315
+shim::btm  2026-09-05 13:21:27.582 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:21:49.583 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:72.154 results:25 
+shim::btm  2026-09-05 13:21:49.583 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:21:49.675 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.092 results:0  
+shim::btm  2026-09-05 13:21:49.685 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:4
+shim::btm  2026-09-05 13:21:49.686 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 13:21:49.689 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-316
+shim::btm  2026-09-05 13:21:49.709 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-317
+shim::btm  2026-09-05 13:21:51.712 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 13:22:14.948 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:22:14.950 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:22:15.028 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:22:15.028 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:22:15.028 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:22:15.042 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-318
+shim::btm  2026-09-05 13:22:15.197 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-319
+shim::btm  2026-09-05 13:22:17.145 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:22:17.182 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 13:22:17.184 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-320
+shim::btm  2026-09-05 13:22:17.199 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-321
+shim::btm  2026-09-05 13:22:17.211 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-322
+shim::btm  2026-09-05 13:22:19.203 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 13:22:21.469 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:22:23.149 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 8.121 results:4  
+shim::btm  2026-09-05 13:22:23.150 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:22:24.907 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:22:25.142 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 1.992 results:1  
+shim::btm  2026-09-05 13:22:25.142 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:22:25.215 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.073 results:0  
+shim::btm  2026-09-05 13:22:25.225 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:4
+shim::btm  2026-09-05 13:22:25.226 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 13:22:25.228 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-323
+shim::btm  2026-09-05 13:22:25.244 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-324
+shim::btm  2026-09-05 13:22:25.397 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:22:25.408 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:22:25.525 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-325
+shim::btm  2026-09-05 13:22:25.604 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-326
+shim::btm  2026-09-05 13:22:27.243 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 13:22:32.115 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:22:32.115 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:22:32.116 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:22:37.085 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 4.969 results:0  
+shim::btm  2026-09-05 13:22:39.735 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:22:47.675 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:22:47.679 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:22:47.763 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-327
+shim::btm  2026-09-05 13:22:47.822 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-328
+shim::btm  2026-09-05 13:24:03.350 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:27:39.759 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:27:39.759 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:27:39.760 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:27:39.821 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:27:41.288 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:27:54.618 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:14.858 results:6  
+shim::btm  2026-09-05 13:27:54.671 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:28:09.737 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:30:04.480 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:30:04.480 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:30:04.480 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:30:06.760 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:30:06.777 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 13:30:06.783 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-329
+shim::btm  2026-09-05 13:30:06.813 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-330
+shim::btm  2026-09-05 13:30:06.832 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-331
+shim::btm  2026-09-05 13:30:08.344 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:30:08.807 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 13:30:10.503 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 6.022 results:0  
+shim::btm  2026-09-05 13:30:10.508 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:30:10.515 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.007 results:0  
+shim::btm  2026-09-05 13:30:10.515 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:30:10.851 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:30:14.615 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:30:14.620 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:30:14.702 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-332
+shim::btm  2026-09-05 13:30:14.762 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-333
+shim::btm  2026-09-05 13:30:56.195 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:30:58.397 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:31:03.988 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:31:26.494 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:75.979 results:0  
+shim::btm  2026-09-05 13:31:26.494 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:31:26.628 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.134 results:0  
+shim::btm  2026-09-05 13:31:26.638 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:4
+shim::btm  2026-09-05 13:31:26.639 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 13:31:26.643 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-334
+shim::btm  2026-09-05 13:31:26.660 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-335
+shim::btm  2026-09-05 13:31:27.521 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:31:27.521 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:31:27.521 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:31:28.657 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 13:31:33.564 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 6.043 results:0  
+shim::btm  2026-09-05 13:32:22.597 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 13:32:22.602 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 13:32:22.679 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-336
+shim::btm  2026-09-05 13:32:22.732 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-337
+shim::btm  2026-09-05 13:34:23.905 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:37:35.895 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:37:48.789 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:37:48.789 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 13:37:48.789 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 13:38:07.288 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:18.499 results:18 
+shim::btm  2026-09-05 13:40:30.628 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:44:22.064 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:48:13.504 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:52:04.538 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:55:56.153 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 13:59:47.809 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:03:38.816 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:05:37.858 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:05:53.067 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:05:57.675 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:06:05.049 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:06:13.339 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:08:39.781 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:12:30.602 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:16:21.929 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:20:13.253 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:26:14.849 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:26:39.053 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:26:39.053 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 14:26:39.053 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:26:43.082 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:26:43.337 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 14:26:43.352 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 14:26:43.699 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 14:26:43.710 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-338
+shim::btm  2026-09-05 14:26:43.712 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-339
+shim::btm  2026-09-05 14:26:43.775 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-340
+shim::btm  2026-09-05 14:26:43.814 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-341
+shim::btm  2026-09-05 14:26:43.945 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-342
+shim::btm  2026-09-05 14:26:45.056 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 6.003 results:0  
+shim::btm  2026-09-05 14:26:45.056 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:26:45.062 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.006 results:0  
+shim::btm  2026-09-05 14:26:45.062 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:26:45.757 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 14:26:49.253 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 14:26:49.259 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:4
+shim::btm  2026-09-05 14:26:49.333 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-343
+shim::btm  2026-09-05 14:26:49.390 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-344
+shim::btm  2026-09-05 14:27:06.669 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s:21.607 results:0  
+shim::btm  2026-09-05 14:27:06.669 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:27:06.785 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.116 results:0  
+shim::btm  2026-09-05 14:27:06.795 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:3
+shim::btm  2026-09-05 14:27:06.797 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 14:27:06.800 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-345
+shim::btm  2026-09-05 14:27:06.826 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-346
+shim::btm  2026-09-05 14:27:07.636 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:27:07.636 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 14:27:07.636 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:27:08.814 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:2
+shim::btm  2026-09-05 14:27:13.674 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 6.037 results:0  
+shim::btm  2026-09-05 14:27:13.684 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:27:13.684 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.000 results:0  
+shim::btm  2026-09-05 14:27:13.685 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:27:15.658 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::btm  2026-09-05 14:27:18.089 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 4.404 results:0  
+shim::btm  2026-09-05 14:27:18.089 SCAN   Le scan started          : 00:00:00:00:00:00 
+shim::btm  2026-09-05 14:27:18.108 SCAN   Le scan stopped          : 00:00:00:00:00:00 duration_s: 0.019 results:0  
+shim::btm  2026-09-05 14:27:30.749 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:0
+shim::btm  2026-09-05 14:27:30.865 ADV    Le advert stopped        : 00:00:00:00:00:00 advert_id:1
+shim::btm  2026-09-05 14:27:33.877 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-347
+shim::btm  2026-09-05 14:27:34.294 ADV    Le advert started        : 00:00:00:00:00:00 reg_id:-348
+shim::btm  2026-09-05 14:28:14.209 ACL    Power mode change        : xx:xx:xx:xx:a9:3f immediate:sniff[0x02] ==> immediate:active[0x00]
+shim::legacy::dumpsys Dumping shim legacy targets:1
+shim::stack Stack information ᛒᚼ
+shim::stack Classic inquiry:disabled
+shim::stack Le scan:disabled
+shim::stack Last 2 inquiry scans:
+shim::stack   2026-09-04 17:32:13.288 - 2026-09-04 17:32:14.862 duration_ms:1574  num_resp:4  std:0  rssi:0  ext:0  tBTM_INQUIRY_CMPL::CANCELED
+shim::stack   2026-09-04 17:32:14.992 - 2026-09-04 17:32:14.993 duration_ms:1     num_resp:0  std:0  rssi:0  ext:0  tBTM_INQUIRY_CMPL::CANCELED
+ ----- shim::acl -----
+shim::acl peer:xx:xx:xx:xx:a9:3f[PUBLIC_DEVICE_ADDRESS(0x00)] handle:0x0041 is_locally_initiated:true creation_time:2026-09-04 17:32:24.893 teardown_time:2026-09-04 17:32:33.975 disconnect_reason:CONNECTION_TERMINATED_BY_LOCAL_HOST(0x16)
+shim::acl peer:xx:xx:xx:xx:a9:3f handle:0x000b is_locally_initiated:true creation_time:2026-09-04 17:32:16.532 teardown_time:2026-09-05 06:24:39.952 disconnect_reason:CONNECTION_TIMEOUT(0x08)
+shim::acl peer:xx:xx:xx:xx:a9:3f handle:0x000b is_locally_initiated:true creation_time:2026-09-05 06:41:05.764 teardown_time:2026-09-05 06:42:04.566 disconnect_reason:CONNECTION_TIMEOUT(0x08)
+shim::acl peer:xx:xx:xx:xx:a9:3f handle:0x000b is_locally_initiated:true creation_time:2026-09-05 06:48:58.601 teardown_time:2026-09-05 06:51:51.618 disconnect_reason:CONNECTION_TIMEOUT(0x08)
+shim::acl Le sources of initiated disconnects
+shim::acl   stack::l2cap::l2c_link::l2c_link_timeout All channels closed:1
+shim::acl remote_addr:xx:xx:xx:xx:a9:3f[public][BT_TRANSPORT_BR_EDR] handle:0x000b
+shim::acl     link_up_issued: true
+shim::acl     flush_timeout:0x0000
+shim::acl     link_supervision_timeout:0.000 sec
+shim::acl     disconnect_reason:0x00
+shim::acl     peer_lmp_features[0] valid:true data:0xbf 0xfe 0x8f 0xfe 0xdb 0xff 0x7b 0x87 
+shim::acl     peer_lmp_features[1] valid:true data:0x0b 0x00 0x00 0x00 0x00 0x00 0x00 0x00 
+shim::acl     peer_lmp_features[2] valid:true data:0x7f 0x0f 0x00 0x00 0x00 0x00 0x00 0x00 
+shim::acl     [classic] link_policy:role_switch: enabled, sniff_mode: enabled
+shim::acl     [classic] sniff_subrating:true
+shim::acl     pkt_types_mask:0xcc18
+shim::acl     role:peripheral
+
+HCI ControllerImpl Dumpsys:
+    local_version_information:
+        hci_version: V_6_0(0x0e)
+        hci_revision: 0x1d1
+        lmp_version: V_6_0(0x0e)
+        lmp_subversion: 0x4208
+        manufacturer_name: 15
+    buffer_size:
+        acl_data_packet_length: 1021
+        total_num_acl_data_packets: 12
+        sco_data_packet_length: 254
+        total_num_sco_data_packets: 1
+    le_buffer_size:
+        le_acl_data_packet_length: 251
+        total_num_le_acl_data_packets: 13
+        iso_data_packet_length: 1396
+        total_num_iso_data_packets: 24
+    le_maximum_data_length:
+        supported_max_tx_octets: 251
+        supported_max_tx_time: 17040
+        supported_max_rx_octets: 251
+        supported_max_rx_time: 17040
+    le_accept_list_size: 128
+    le_resolving_list_size: 128
+    le_maximum_advertising_data_length: 1650
+    le_suggested_default_data_length: 27
+    le_number_supported_advertising_sets: 16
+    le_periodic_advertiser_list_size: 6
+    le_supported_states: 0x000003ffffffffff
+    local_supported_features:
+        page0: 0x877bffdbfe8ffebf
+        page1: 0x0000000000000002
+        page2: 0x0000000000000f33
+    le_local_supported_features:
+        page0: 0x00015dbeff017fef
+    local_supported_commands: [
+        0xff, 0xff, 0xff, 0x03, 0xcc, 0xff, 0xef, 0xff,
+        0xff, 0xff, 0xfc, 0x1f, 0xfe, 0x0f, 0xe8, 0xfe,
+        0xff, 0xf7, 0x8f, 0xff, 0xfc, 0x00, 0x04, 0x18,
+        0xe3, 0xf7, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xbf, 0xff, 0x03,
+        0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    ]
+    vendor_capabilities:
+        is_supported: 1
+        max_adv_instances: 1
+        offloaded_resolution_of_private_addresses: 1
+        total_scan_result_storage: 10240
+        max_irk_list_size: 0
+        filtering_support: 1
+        max_filter: 57
+        activity_energy_info_support: 1
+        version_supported: 261
+        total_num_of_advt_tracked: 20
+        extended_scan_support: 1
+        debug_logging_supported: 1
+        le_address_generation_offloading_support: 0
+        a2dp_source_offload_capability_mask: 35
+        bluetooth_quality_report_support: 1
+        dynamic_audio_buffer_support: 35
+        a2dp_offload_v2_support: 0
+        iso_link_feedback_support: 0
+        sniff_offload_support: 0
+        big_set_channel_map_classification_support: 0
+        vendor_connection_handle_min: 0
+        vendor_connection_handle_max: 0
+
+ACL Manager Dumpsys:
+    le_connectability_state: "ConnectabilityState::DISARMED"
+    le_filter_accept_list_count: 0
+    le_filter_accept_list: [
+    ]
+
+LE Advertising Manager Dumpsys:
+    id: 0 address: xx:xx:xx:xx:43:7a[RANDOM_DEVICE_ADDRESS(0x01)] duration: 0 in_use: true started: true connectable: true discoverable: true directed: false periodic: false
+    id: 1 address: xx:xx:xx:xx:d8:b6[RANDOM_DEVICE_ADDRESS(0x01)] duration: 0 in_use: true started: true connectable: true discoverable: true directed: false periodic: false
+    id: 3 address: xx:xx:xx:xx:58:aa[RANDOM_DEVICE_ADDRESS(0x01)] duration: 0 in_use: true started: true connectable: false discoverable: true directed: false periodic: false
+
+Wakelock Dumpsys:
+    is_acquired: false
+    is_native: true
+    acquired_count: 1
+    released_count: 1
+    acquired_error_count: 0
+    released_error_count: 0
+    last_acquired_error_code: 0
+    last_released_error_code: 0
+    last_acquired_timestamp_ms: 167
+    last_released_timestamp_ms: 346828012
+    last_interval_ms: 167
+    max_interval_ms: 167
+    min_interval_ms: 167
+    avg_interval_ms: 167
+    total_interval_ms: 167
+    total_time_since_reset_ms: 109867948

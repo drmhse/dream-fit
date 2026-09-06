@@ -1,0 +1,22 @@
+plugins {
+  id("com.android.application")
+  id("org.jetbrains.kotlin.android") version "2.4.10"
+  id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
+}
+android {
+  namespace = "com.drmhse.dream.fit"
+  compileSdk = 36
+  defaultConfig { applicationId = "com.drmhse.dream.fit"; minSdk = 33; targetSdk = 34; versionCode = 1; versionName = "0.1" }
+  buildTypes { release { minifyEnabled = false } }
+  buildFeatures { compose = true }
+  compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
+  kotlinOptions { jvmTarget = "17" }
+}
+dependencies {
+  implementation("androidx.core:core-ktx:1.13.1")
+  implementation("androidx.activity:activity-compose:1.13.0")
+  implementation("androidx.wear.compose:compose-material3:1.6.2")
+  implementation("androidx.wear.compose:compose-foundation:1.6.2")
+  implementation("androidx.health:health-services-client:1.0.0")
+  implementation("com.google.guava:guava:33.3.1-android")
+}

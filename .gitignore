@@ -1,0 +1,9 @@
+**/build/
+**/build-*/
+**/.gradle/
+**/DerivedData/
+*.apk
+local.properties
+brand/out/
+.DS_Store
+**/xcuserdata/
