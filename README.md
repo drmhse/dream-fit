@@ -66,7 +66,7 @@ advertising.
 ## Status
 
 Working: BLE link (backoff reconnect on iPhone, scheduled re-burst on watch), foreground-persistent watch service,
-in-app notify → watch notification, HR + absolute daily aggregates, HealthKit
+in-app notify → watch notification, full ANCS client + call answer/decline (activates on BT pairing), HR + absolute daily aggregates, HealthKit
 mirror in both directions, light/dark iPhone UI. Next: ANCS system
 notifications / call actions / media control after Bluetooth pairing; Google
 sign-in for Calendar/Gmail/Weather. Honest ledger, including what is

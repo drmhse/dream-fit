@@ -64,4 +64,5 @@ That makes repeats, out-of-order delivery, reconnects and external edits all
 self-healing, with no deltas, baselines or migrations to maintain.
 
 `hr` is live telemetry, not an aggregate — throttled to 5s, saved as samples,
-and never summed into anything.
+and never summed into anything. `rhr` is the day's lowest 10-minute HR
+minimum; `exmin` accrues one per minute above 110 bpm.
