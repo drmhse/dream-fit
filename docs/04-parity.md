@@ -3,12 +3,13 @@
 Goal: Pixel Watch 4 on iPhone feeling like Pixel 9 + Watch. Honest ledger.
 
 ## Done
-- BLE link (custom GATT 6E400001, LOW_POWER, adv-off-while-subscribed, backoff reconnect on iPhone + scheduled re-burst on watch)
+- BLE link (custom GATT 6E400001, encrypted + MITM-gated, LOW_POWER, adv-off-while-subscribed, backoff reconnect on iPhone + scheduled re-burst on watch)
 - Foreground-persistent watch service (immune to app-idle kill)
 - In-app notify → visible watch notification; full ANCS client beyond that (see below)
 - HR (5s throttle) event-driven; daily aggregates pushed as absolutes
 - Watch is sole authority for daily totals; HealthKit reconciles to it in both
-  directions (see `01-protocol.md`)
+  directions, and a reconcile that cannot run right now is queued and retried
+  rather than dropped (see `01-protocol.md`)
 - Flow-controlled notify/write queues and bounded reassembly buffers on both ends
 - iPhone UI: step-goal ring, live HR chart, actionable permission banners,
   light/dark verified in the simulator
@@ -31,7 +32,11 @@ Goal: Pixel Watch 4 on iPhone feeling like Pixel 9 + Watch. Honest ledger.
   permission, with a Settings deep link on permanent denial
 
 ## Ready, one Xcode step away
-- iOS HealthKit sink (`HealthStore.swift`): HR, resting HR + steps to Apple Health, auth + live ❤/steps in UI. The code is written and committed — no signing team lives in the repo, so open `ios/DreamFit.xcodeproj` → DreamFit target → Signing & Capabilities → pick your Apple Developer team, then build to device.
+- iOS HealthKit sink (`HealthKitSink.swift` + `HealthStore.swift`): HR, resting
+  HR + steps to Apple Health, auth + live ❤/steps in UI. The code is written and
+  committed — no signing team lives in the repo, so open `ios/DreamFit.xcodeproj`
+  → DreamFit target → Signing & Capabilities → pick your Apple Developer team,
+  then build to device.
 
 ## Next (watch code ships, needs iPhone Settings > Bluetooth pair)
 - Flip the switch: pair the watch as a BT accessory and the ANCS client above
