@@ -1,99 +1,206 @@
+import Combine
 import CoreBluetooth
 import Foundation
 
-// The watch owns every daily aggregate; `day` is absolute and idempotent.
-enum WatchEvent {
-    case hr(Int)
-    case day(WatchDay)
+// Where the phone is in the link's lifecycle.
+//
+// Every bug this file has had was two variables disagreeing about one fact:
+// connected-but-no-handle, discovering-that-never-finished, ready-that-was-only
+// -half-true. `receiving` is that half-truth given a name — the watch is
+// talking to us and we hold nothing to answer on.
+enum LinkPhase: Equatable {
+    case radioDown(CBManagerState)
+    case searching
+    case connecting
+    case resolving
+    case receiving
+    case ready
+
+    var label: String {
+        switch self {
+        case let .radioDown(s): "bt-\(s.rawValue)"
+        case .searching: "searching"
+        case .connecting: "connecting"
+        case .resolving: "resolving"
+        case .receiving: "receiving"
+        case .ready: "connected"
+        }
+    }
+
+    // How long this phase may last before it is stuck rather than slow.
+    // Searching and ready are steady states; the rest are transitions, and a
+    // transition that does not finish is the bug.
+    var deadline: TimeInterval? {
+        switch self {
+        case .radioDown, .searching, .ready: nil
+        case .connecting: 120
+        case .resolving: 10
+        case .receiving: 60
+        }
+    }
 }
 
-struct WatchDay {
-    let date: String
-    let steps: Int
-    let rhr: Int
-    let exMin: Int
-    let battery: Int
-}
-
-struct LogRow: Identifiable {
-    let id = UUID()
-    let text: String
-}
-
+// Transport only: frames lines off the TX characteristic and hands them to
+// WatchEvent to decode. What the numbers mean is not this class's business.
 final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private static let serviceUUID = CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")
     private static let rxUUID = CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E")
     private static let txUUID = CBUUID(string: "6E400003-B5A3-F393-E0A9-E50E24DCCA9E")
-    private static let maxLogRows = 200
     private static let maxRxBuffer = 4096
     private static let maxWriteQueue = 128
+    private static let tick: TimeInterval = 15
+    // Attempts within a phase before we stop retrying it and drop the link.
+    private static let maxAttempts = 3
+    // The watch pushes a `day` every 15 minutes come what may, so silence past
+    // this is not a quiet watch — it is a link that has stopped working.
+    private static let silenceProbe: TimeInterval = 1200
+    private static let silenceReset: TimeInterval = 1500
 
-    @Published private(set) var state = "starting"
-    @Published private(set) var log: [LogRow] = []
-    @Published private(set) var isReady = false
+    // One published fact. Everything the UI asks is a question about it, so
+    // there is nothing left to keep in step.
+    @Published private(set) var phase: LinkPhase = .radioDown(.unknown)
+
+    var isLinked: Bool { phase == .receiving || phase == .ready }
+    var canSend: Bool { phase == .ready }
+    var state: String { phase.label }
+    var btBlocked: Bool { phase == .radioDown(.unauthorized) }
+    var btOff: Bool { phase == .radioDown(.poweredOff) }
 
     var onEvent: ((WatchEvent) -> Void)?
+    var onReady: (() -> Void)?
+
+    private let diag = Diagnostics.shared
 
     // Implicitly unwrapped but always accessed with `?`: iOS can call
     // willRestoreState from inside CBCentralManager's own initialiser, before
     // this property has been assigned.
     private var central: CBCentralManager!
-    private var peripheral: CBPeripheral?
+    private var subject: CBPeripheral?
     private var rxCharacteristic: CBCharacteristic?
-    private var connectingIDs = Set<UUID>()
-    private var discovering = false
     private var rxBuffer = ""
     private var writeQueue: [Data] = []
-    private var retryDelay: TimeInterval = 1
 
-    var btBlocked: Bool { central?.state == .unauthorized }
-    var btOff: Bool { central?.state == .poweredOff }
+    private var enteredAt = Date()
+    private var attempts = 0
+    private var lastDay = Date()
+    private var probed = false
+    private var heartbeat: Timer?
 
     override init() {
         super.init()
         central = CBCentralManager(delegate: self, queue: nil, options: [
             CBCentralManagerOptionRestoreIdentifierKey: "dreamfit-central",
         ])
+        heartbeat = Timer.scheduledTimer(withTimeInterval: Self.tick, repeats: true) { [weak self] _ in
+            self?.age()
+        }
     }
 
-    // MARK: - Readiness
+    deinit { heartbeat?.invalidate() }
+
+    // MARK: - The machine
     //
-    // Derived from the link itself, never latched by whichever callback
-    // happened to fire. A restored connection is just as ready as a fresh one.
+    // One entry point for every change, so a phase transition cannot happen
+    // without its side effect, and a side effect cannot happen without the
+    // phase to justify it.
 
-    private func refreshReady() {
-        let ready = peripheral?.state == .connected && rxCharacteristic != nil
-        if ready != isReady { isReady = ready }
-        if ready {
-            state = "connected"
-        } else if let c = central, c.state != .poweredOn {
-            state = "bt-\(c.state.rawValue)"
-        } else {
-            state = "searching"
+    private func enter(_ next: LinkPhase) {
+        guard next != phase else { return }
+        append("\(phase.label) → \(next.label)")
+        if phase == .searching { central?.stopScan() }
+        phase = next
+        enteredAt = Date()
+        attempts = 0
+
+        switch next {
+        case .radioDown:
+            forgetConnection()
+        case .searching:
+            pageKnown()
+            scan()
+        case .connecting:
+            break // the connect request is what got us here
+        case .resolving:
+            discover()
+        case .receiving:
+            break // the tick will keep trying to resolve a write handle
+        case .ready:
+            probed = false
+            lastDay = Date()
+            onReady?()
+            // Re-ask straight away: after a restore the aggregates on screen
+            // are as old as the last heartbeat.
+            requestSync()
         }
     }
 
-    // Take (or re-take) ownership of a peripheral and make sure we hold live
-    // characteristic handles for it.
-    private func adopt(_ p: CBPeripheral) {
-        if peripheral?.identifier != p.identifier {
-            peripheral = p
-            rxCharacteristic = nil
-            rxBuffer = ""
-        }
-        p.delegate = self
-        if p.state == .connected {
-            knownUUID = p.identifier
-            central?.stopScan()
-            if rxCharacteristic == nil, !discovering {
-                discovering = true
-                p.discoverServices([Self.serviceUUID])
+    // A phase that outlives its deadline is retried, and retried a bounded
+    // number of times before the link itself is the thing we stop believing.
+    private func age() {
+        if let deadline = phase.deadline, Date().timeIntervalSince(enteredAt) > deadline {
+            attempts += 1
+            enteredAt = Date()
+            switch phase {
+            case .connecting:
+                append("connect pending too long, re-paging")
+                enter(.searching)
+            case .resolving, .receiving:
+                if attempts >= Self.maxAttempts {
+                    append("no write handle after \(attempts) tries, dropping link")
+                    dropConnection()
+                } else {
+                    append("rediscovering (\(attempts))")
+                    discover()
+                }
+            default:
+                break
             }
         }
-        refreshReady()
+        checkFreshness()
     }
 
-    // MARK: - Discovery
+    // Liveness is measured in `day` messages, not in bytes: heart rate arrives
+    // every 5s and would mask a link that can receive but no longer send.
+    private func checkFreshness() {
+        guard isLinked else { return }
+        let silent = Date().timeIntervalSince(lastDay)
+        if silent > Self.silenceReset {
+            append("no day in \(Int(silent))s, dropping link")
+            lastDay = Date()
+            dropConnection()
+        } else if silent > Self.silenceProbe, canSend, !probed {
+            probed = true
+            append("no day in \(Int(silent))s, probing")
+            requestSync()
+        }
+    }
+
+    private func dropConnection() {
+        guard let p = subject else { enter(.searching); return }
+        // Dropping is what forces a fresh discovery and a fresh CCCD write on
+        // reconnect, which is the part the watch is waiting for.
+        central?.cancelPeripheralConnection(p)
+        forgetConnection()
+        enter(.searching)
+    }
+
+    private func forgetConnection() {
+        rxCharacteristic = nil
+        rxBuffer = ""
+        writeQueue.removeAll()
+    }
+
+    // MARK: - Actions
+
+    private func discover() {
+        guard let p = subject, p.state == .connected else { return }
+        p.discoverServices([Self.serviceUUID])
+    }
+
+    private func scan() {
+        guard central?.state == .poweredOn, subject?.state != .connected else { return }
+        central?.scanForPeripherals(withServices: [Self.serviceUUID], options: nil)
+    }
 
     // The watch advertises 30s per 5.5min to save battery. A known peripheral
     // can be paged with no advertising at all, so remember it and skip the wait.
@@ -102,10 +209,39 @@ final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate,
         set { UserDefaults.standard.set(newValue?.uuidString, forKey: "watchUUID") }
     }
 
+    private func pageKnown() {
+        guard let id = knownUUID,
+              let p = central?.retrievePeripherals(withIdentifiers: [id]).first else { return }
+        if p.state == .connected { adopt(p); return }
+        guard p.state == .disconnected else { return }
+        append("paging known watch")
+        connect(p)
+    }
+
+    private func connect(_ p: CBPeripheral) {
+        subject = p
+        p.delegate = self
+        central?.connect(p, options: nil)
+        enter(.connecting)
+    }
+
+    // Take (or re-take) ownership of a peripheral iOS says is already live.
+    private func adopt(_ p: CBPeripheral) {
+        if subject?.identifier != p.identifier {
+            subject = p
+            forgetConnection()
+        }
+        p.delegate = self
+        guard p.state == .connected else { return }
+        knownUUID = p.identifier
+        enter(rxCharacteristic == nil ? .resolving : .ready)
+    }
+
+    // MARK: - Central delegate
+
     // iOS hands back a live connection with notifications still enabled, but it
     // does NOT replay didConnect or characteristic discovery. Without adopting
-    // it here the link keeps delivering data while the app believes it is down
-    // — and every write fails, because there is no RX handle.
+    // it here the link keeps delivering data while the app believes it is down.
     func centralManager(_: CBCentralManager, willRestoreState dict: [String: Any]) {
         for p in dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral] ?? [] {
             adopt(p)
@@ -113,111 +249,68 @@ final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate,
     }
 
     func centralManagerDidUpdateState(_ c: CBCentralManager) {
-        guard c.state == .poweredOn else { refreshReady(); return }
-        if let p = peripheral, p.state == .connected {
-            adopt(p)
-        } else {
-            connectKnown()
-            startScan()
-        }
-        refreshReady()
-    }
-
-    private func connectKnown() {
-        guard let id = knownUUID,
-              let p = central?.retrievePeripherals(withIdentifiers: [id]).first else { return }
-        if p.state == .connected { adopt(p); return }
-        guard p.state == .disconnected else { return }
-        connect(p)
-        append("paging known watch")
-    }
-
-    private func startScan() {
-        guard central?.state == .poweredOn, peripheral?.state != .connected else { return }
-        central?.scanForPeripherals(withServices: [Self.serviceUUID], options: nil)
-    }
-
-    private func connect(_ p: CBPeripheral) {
-        guard !connectingIDs.contains(p.identifier) else { return }
-        connectingIDs.insert(p.identifier)
-        peripheral = p
-        p.delegate = self
-        central?.connect(p, options: nil)
+        guard c.state == .poweredOn else { enter(.radioDown(c.state)); return }
+        if let p = subject, p.state == .connected { adopt(p) } else { enter(.searching) }
     }
 
     func centralManager(_: CBCentralManager, didDiscover p: CBPeripheral,
                         advertisementData _: [String: Any], rssi: NSNumber) {
-        guard p.state == .disconnected else { return }
+        guard phase == .searching, p.state == .disconnected else { return }
         append("found watch \(rssi)")
         connect(p)
     }
 
     func centralManager(_: CBCentralManager, didConnect p: CBPeripheral) {
-        connectingIDs.remove(p.identifier)
-        retryDelay = 1
+        guard p.identifier == subject?.identifier else { return }
         // Handles from any previous connection are void.
-        rxCharacteristic = nil
-        discovering = false
+        forgetConnection()
         adopt(p)
-        append("connected")
     }
 
     // Only the peripheral we are actually using may tear down our state: a late
     // callback for one we already replaced would otherwise mark a live link dead.
     func centralManager(_: CBCentralManager, didDisconnectPeripheral p: CBPeripheral, error _: Error?) {
-        connectingIDs.remove(p.identifier)
-        guard p.identifier == peripheral?.identifier else { return }
-        peripheral = nil
-        rxCharacteristic = nil
-        discovering = false
-        rxBuffer = ""
-        writeQueue.removeAll()
-        refreshReady()
-        append("disconnected, rescanning")
-        connectKnown()
-        startScan()
+        guard p.identifier == subject?.identifier else { return }
+        forgetConnection()
+        enter(.searching)
     }
 
-    // Exponential backoff: a tight retry loop on a watch that is asleep burns
-    // both radios for nothing.
     func centralManager(_: CBCentralManager, didFailToConnect p: CBPeripheral, error _: Error?) {
-        connectingIDs.remove(p.identifier)
-        append("connect failed, retry in \(Int(retryDelay))s")
-        let delay = retryDelay
-        retryDelay = min(retryDelay * 2, 60)
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-            guard let self, self.peripheral?.state != .connected else { return }
-            self.connect(p)
-        }
+        guard p.identifier == subject?.identifier else { return }
+        // No backoff of our own: `searching` pages the known watch and scans,
+        // and the tick re-enters it. A tight retry loop was the old behaviour.
+        enter(.searching)
     }
 
-    // MARK: - GATT
+    // MARK: - Peripheral delegate
 
     func peripheral(_ p: CBPeripheral, didDiscoverServices _: Error?) {
-        for s in p.services ?? [] {
+        // iOS caches the attribute database. After the watch app is reinstalled
+        // discovery can come back empty while notifications still arrive on the
+        // old handle — the tick retries, and gives up into a reconnect.
+        guard let services = p.services, !services.isEmpty else {
+            append("no services found")
+            return
+        }
+        for s in services {
             p.discoverCharacteristics([Self.rxUUID, Self.txUUID], for: s)
         }
     }
 
     func peripheral(_ p: CBPeripheral, didDiscoverCharacteristicsFor s: CBService, error _: Error?) {
-        discovering = false
         for ch in s.characteristics ?? [] {
             if ch.uuid == Self.txUUID { p.setNotifyValue(true, for: ch) }
             if ch.uuid == Self.rxUUID { rxCharacteristic = ch }
         }
-        refreshReady()
-        if isReady {
-            append("ready")
-            // Re-ask straight away: after a restore the aggregates on screen
-            // are as old as the last heartbeat.
-            requestSync()
-        }
+        if rxCharacteristic != nil { enter(.ready) }
     }
 
     func peripheral(_ p: CBPeripheral, didUpdateValueFor ch: CBCharacteristic, error _: Error?) {
         // Data proves the link is live. If our bookkeeping disagrees, the data
-        // wins and we re-acquire handles for whoever is actually talking.
-        if p.identifier != peripheral?.identifier || rxCharacteristic == nil { adopt(p) }
+        // wins: hearing the watch without a handle to answer on is `receiving`,
+        // a state the tick works to get out of.
+        if p.identifier != subject?.identifier { adopt(p) }
+        if rxCharacteristic == nil, phase != .receiving { enter(.receiving) }
 
         guard let d = ch.value, let s = String(data: d, encoding: .utf8) else { return }
         rxBuffer += s
@@ -230,26 +323,11 @@ final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate,
         while let nl = rxBuffer.firstIndex(of: "\n") {
             let line = String(rxBuffer[rxBuffer.startIndex ..< nl])
             rxBuffer = String(rxBuffer[rxBuffer.index(after: nl)...])
-            if !line.isEmpty { route(line) }
-        }
-    }
-
-    private func route(_ s: String) {
-        append("rx: \(s)")
-        guard let data = s.data(using: .utf8),
-              let o = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let t = o["t"] as? String else { return }
-        switch t {
-        case "hr":
-            if let bpm = o["bpm"] as? Int { onEvent?(.hr(bpm)) }
-        case "day":
-            guard let d = o["d"] as? String, let steps = o["steps"] as? Int else { return }
-            onEvent?(.day(WatchDay(date: d, steps: steps,
-                                   rhr: o["rhr"] as? Int ?? 0,
-                                   exMin: o["exmin"] as? Int ?? 0,
-                                   battery: o["bat"] as? Int ?? -1)))
-        default:
-            break
+            if line.isEmpty { continue }
+            append("rx: \(line)")
+            guard let event = WatchEvent.decode(line) else { continue }
+            if case .day = event { lastDay = Date(); probed = false }
+            onEvent?(event)
         }
     }
 
@@ -257,17 +335,19 @@ final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate,
 
     func requestSync() { send(["t": "sync"]) }
 
+    // The goal lives on the phone and the watch draws its bezel from it, so it
+    // is pushed on every change and again whenever the link comes back.
+    func sendGoal(_ steps: Int) { send(["t": "goal", "steps": steps]) }
+
     func sendNotify(title: String, body: String) {
         send(["t": "notify", "title": title, "body": body])
     }
 
-    private func send(_ payload: [String: String]) {
-        guard let p = peripheral, p.state == .connected, rxCharacteristic != nil else {
-            append("not ready")
-            startScan()
+    private func send(_ payload: [String: Any]) {
+        guard canSend, let p = subject, let json = try? JSONSerialization.data(withJSONObject: payload) else {
+            append("cannot send in \(phase.label)")
             return
         }
-        guard let json = try? JSONSerialization.data(withJSONObject: payload) else { return }
         let bytes = json + Data([0x0A])
         let cap = max(1, p.maximumWriteValueLength(for: .withoutResponse))
         guard writeQueue.count + bytes.count / cap < Self.maxWriteQueue else {
@@ -283,7 +363,7 @@ final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate,
     // Without-response writes are silently discarded once the queue is full;
     // a partial message means the watch never sees a newline.
     private func drainWrites() {
-        guard let p = peripheral, let ch = rxCharacteristic, p.state == .connected else { return }
+        guard let p = subject, let ch = rxCharacteristic, p.state == .connected else { return }
         while !writeQueue.isEmpty, p.canSendWriteWithoutResponse {
             p.writeValue(writeQueue.removeFirst(), for: ch, type: .withoutResponse)
         }
@@ -291,10 +371,5 @@ final class BridgeCentral: NSObject, ObservableObject, CBCentralManagerDelegate,
 
     func peripheralIsReady(toSendWriteWithoutResponse _: CBPeripheral) { drainWrites() }
 
-    // MARK: - Log
-
-    private func append(_ text: String) {
-        log.append(LogRow(text: text))
-        if log.count > Self.maxLogRows { log.removeFirst(log.count - Self.maxLogRows) }
-    }
+    private func append(_ text: String) { diag.note(text) }
 }
