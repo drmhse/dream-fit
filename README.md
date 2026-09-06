@@ -1,6 +1,6 @@
-# Dream Fit — Pixel Watch ↔ iPhone bridge
+# Dream Fit — use a Pixel Watch with an iPhone
 
-Use a Pixel Watch 4 from an iPhone. iOS exposes no BT Classic RFCOMM to
+A Wear OS to iOS bridge for the Pixel Watch 4: use your watch from an iPhone. iOS exposes no BT Classic RFCOMM to
 non-MFi accessories and no Google Mobile Services, so a true pairing clone is
 impossible — this is a practical **side-channel bridge** over Bluetooth LE
 instead: the watch advertises a tiny GATT service, the iPhone app acts as
