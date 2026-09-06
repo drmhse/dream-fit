@@ -59,9 +59,8 @@ cp Signing.xcconfig.example Signing.xcconfig   # then add your team ID
 xcodegen generate                              # the .xcodeproj is not tracked
 open DreamFit.xcodeproj
 ```
-Copy `Signing.xcconfig.example` to `Signing.xcconfig` and put your team ID in it
-before generating. Build to device — Bluetooth and HealthKit entitlements both
-require real hardware.
+Build to device — Bluetooth and HealthKit entitlements both require real
+hardware.
 
 **nRF Connect** will find `6E400001` in an advertising burst but will be refused
 when it tries to read: the characteristics require an encrypted, MITM-protected
