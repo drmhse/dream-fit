@@ -5,8 +5,12 @@ options:
   xcodeVersion: "16.0"
 settings:
   CODE_SIGN_STYLE: Automatic
-  # Signing team is picked in Xcode after regen (Signing & Capabilities),
-  # so no DEVELOPMENT_TEAM lives in this repo.
+# DEVELOPMENT_TEAM comes from Signing.xcconfig, which is gitignored: Xcode
+# writes the team into the project file the moment you pick one, and a team ID
+# in a public repo is a contributor's identity, not a build setting.
+configFiles:
+  Debug: Signing.xcconfig
+  Release: Signing.xcconfig
 targets:
   DreamFit:
     type: application

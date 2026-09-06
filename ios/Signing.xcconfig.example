@@ -1,0 +1,3 @@
+// Copy to Signing.xcconfig and fill in before `xcodegen generate`.
+// Xcode → DreamFit target → Signing & Capabilities shows your team ID.
+DEVELOPMENT_TEAM =
