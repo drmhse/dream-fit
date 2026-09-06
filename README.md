@@ -74,6 +74,17 @@ impossible (eSIM, Wallet, Play installs, Fitbit-cloud sync): `docs/04-parity.md`
 
 ## Privacy
 
-No personal data lives in this repo: `capture/` dumps and `docs/` are scrubbed
-of MACs, serials, node IDs and LAN addresses (see `capture/README.md`), and no
-Apple signing team is checked in — pick your own in Xcode after regen.
+Your health data never leaves your devices: watch → your iPhone over BLE →
+Apple Health on that same iPhone. No accounts, no cloud sync, no analytics.
+The HealthKit mirror is scoped to Dream Fit's own samples, so it neither
+reads your iPhone's pocket pedometer nor touches other apps' data, and the
+watch keeps only the current day's aggregates in local storage.
+
+Known limitation: the GATT link has no authentication (lab-grade, see
+`docs/01-protocol.md`) — anyone in radio range during an advertising burst
+could connect and read heart-rate and step counts. Fine for personal use,
+not a claim of medical-device security.
+
+Repo hygiene, separately: `capture/` dumps and `docs/` are scrubbed of MACs,
+serials, node IDs and LAN addresses (see `capture/README.md`), and no Apple
+signing team is checked in — pick your own in Xcode after regen.
