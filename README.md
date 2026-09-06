@@ -6,6 +6,8 @@ impossible — this is a practical **side-channel bridge** over Bluetooth LE
 instead: the watch advertises a tiny GATT service, the iPhone app acts as
 central, and daily health data flows as absolute, idempotent messages.
 
+![Dream Fit on the iPhone and on the Pixel Watch, both showing 435 steps, a 79 bpm heart rate and a resting rate of 57, with the 4,500 step goal set on the phone driving the watch's bezel](docs/screens/apps.png)
+
 ![Architecture](docs/architecture.svg)
 
 ## How it works
