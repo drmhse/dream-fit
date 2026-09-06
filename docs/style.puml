@@ -1,0 +1,85 @@
+' Shared look for every diagram in this repo. Colours are the app's own:
+' green is the watch and its steps, blue is the phone, red is heart rate,
+' amber is a caveat worth stopping for.
+!$ink     = "#1C1C1E"
+!$muted   = "#6E6E73"
+!$hair    = "#C7C7CC"
+!$paper   = "#FFFFFF"
+
+!$watch   = "#1DA34A"
+!$watchBg = "#EAF8EF"
+!$watchPl = "#F6FDF8"
+
+!$phone   = "#0A6ED1"
+!$phoneBg = "#EAF2FC"
+!$phonePl = "#F6FAFF"
+
+!$ext     = "#6E6E73"
+!$extBg   = "#F2F2F7"
+
+!$warn    = "#B26A00"
+!$warnBg  = "#FFF6E5"
+
+skinparam backgroundColor $paper
+skinparam defaultFontName Helvetica
+skinparam defaultFontColor $ink
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam ArrowColor $muted
+skinparam ArrowFontColor $muted
+skinparam ArrowFontSize 11
+skinparam componentStyle rectangle
+skinparam TitleFontSize 16
+skinparam TitleFontColor $ink
+
+skinparam component {
+  FontColor $ink
+  FontSize 12
+  BorderThickness 1
+}
+skinparam component<<watch>> {
+  BorderColor $watch
+  BackgroundColor $watchBg
+}
+skinparam component<<phone>> {
+  BorderColor $phone
+  BackgroundColor $phoneBg
+}
+skinparam component<<ext>> {
+  BorderColor $hair
+  BackgroundColor $extBg
+  FontColor $muted
+}
+
+skinparam package {
+  BorderColor $hair
+  BackgroundColor $paper
+  FontColor $muted
+  FontSize 13
+  BorderThickness 1
+}
+
+skinparam note {
+  BorderColor $warn
+  BackgroundColor $warnBg
+  FontColor $ink
+  FontSize 11
+}
+
+skinparam sequence {
+  LifeLineBorderColor $hair
+  LifeLineBackgroundColor $paper
+  ParticipantBorderThickness 1
+  ParticipantFontColor $ink
+  ParticipantFontSize 12
+  ParticipantPadding 18
+  BoxBorderColor $hair
+  BoxFontColor $muted
+  DividerBorderColor $hair
+  DividerBackgroundColor $extBg
+  DividerFontColor $ink
+  GroupBorderColor $hair
+  GroupBackgroundColor $paper
+  GroupHeaderFontColor $muted
+  GroupHeaderBackgroundColor $extBg
+}

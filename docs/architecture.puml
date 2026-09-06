@@ -1,0 +1,69 @@
+@startuml architecture
+!pragma layout smetana
+!include style.puml
+hide stereotype
+title Dream Fit — Pixel Watch 4 ↔ iPhone
+
+package "Pixel Watch 4 · Wear OS" as WATCHBOX {
+  component "Health Services\nSTEPS_DAILY" as HS <<ext>>
+  component "Sensors\nheart rate · step counter" as SENSORS <<ext>>
+  component "PassiveDataService" as PASSIVE <<watch>>
+  component "DayLog\nsteps · resting HR · exercise\nrollover + projection" as DAYLOG <<watch>>
+  component "Settings\nstep goal" as WSET <<watch>>
+  component "BridgeService\nGATT server · TX queue\nlink phases" as SVC <<watch>>
+  component "Advertiser\n30s burst / 5min rest" as ADV <<watch>>
+  component "AncsClient" as ANCS <<watch>>
+  component "Tray\nnotifications · call actions" as TRAY <<watch>>
+  component "WatchState" as WSTATE <<watch>>
+  component "DreamFitScreen\nCompose" as WUI <<watch>>
+
+  HS --> PASSIVE : daily aggregate
+  PASSIVE --> DAYLOG : absolute total
+  SENSORS --> DAYLOG : projection\nbetween aggregates
+  SENSORS --> SVC : heart rate (5s)
+  DAYLOG --> SVC : day record
+  WSET --> SVC
+  SVC --> ADV : off while subscribed
+  SVC --> WSTATE
+  DAYLOG --> WSTATE
+  WSTATE --> WUI
+  ANCS --> TRAY
+}
+
+package "iPhone · iOS" as PHONEBOX {
+  component "iOS ANCS" as IOSANCS <<ext>>
+  component "BridgeCentral\nCoreBluetooth central\nLinkPhase state machine" as BC <<phone>>
+  component "WatchEvent\nwire decode · day bounds" as EVENT <<phone>>
+  component "HealthStore\nsnapshot · step mirror\nqueue + retry" as STORE <<phone>>
+  component "HealthKitSink\nasync HealthKit" as SINK <<phone>>
+  component "ContentView\nring · chart · goal" as UI <<phone>>
+  component "Diagnostics\nin-app + system log" as DIAG <<phone>>
+  component "Apple Health" as HK <<ext>>
+
+  BC --> EVENT : lines
+  EVENT --> STORE : hr · day
+  STORE --> SINK : reconcile
+  SINK --> HK : steps · HR · resting HR
+  STORE --> UI
+  BC --> UI : link phase
+  UI --> STORE : step goal
+  STORE --> BC : goal push
+  BC ..> DIAG
+  STORE ..> DIAG
+}
+
+SVC <-[#0A6ED1,thickness=2]-> BC : **GATT 6E400001**\nTX notify: hr · day\nRX write: notify · sync · goal
+ANCS <-[#6E6E73,dashed]- IOSANCS : **ANCS** — every iPhone notification
+
+note bottom of SVC
+  Both links ride one bond. Every
+  characteristic requires an encrypted,
+  MITM-protected connection.
+end note
+
+note right of STORE
+  The watch owns every daily total.
+  HealthKit is a mirror reconciled
+  against it, never an accumulator.
+end note
+@enduml

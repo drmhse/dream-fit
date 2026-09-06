@@ -1,0 +1,81 @@
+@startuml sequence
+!include style.puml
+title A day's steps, from the watch's sensors to Apple Health
+
+box "Pixel Watch 4" #F6FDF8
+  participant "Health\nServices" as HS #F2F2F7
+  participant "DayLog" as DAY #EAF8EF
+  participant "BridgeService" as SVC #EAF8EF
+end box
+
+box "iPhone" #F6FAFF
+  participant "BridgeCentral" as BC #EAF2FC
+  participant "HealthStore" as HS2 #EAF2FC
+  participant "HealthKitSink" as SINK #EAF2FC
+  participant "Apple Health" as HK #F2F2F7
+end box
+
+== Link ==
+
+SVC -> SVC : advertise\n30s burst / 5min rest
+BC -[#0A6ED1]> SVC : connect (bond keys)
+note right of BC
+  Encrypted + MITM-protected,
+  or the watch refuses everything.
+end note
+BC -> SVC : discover services
+BC -> SVC : subscribe (CCCD write)
+SVC -> SVC : advertising off
+BC -> SVC : {"t":"sync"}
+BC -> SVC : {"t":"goal","steps":N}
+
+== Steady state ==
+
+HS -> DAY : STEPS_DAILY (absolute)
+DAY -> DAY : raise only; re-anchor\nhardware counter
+SVC -[#1DA34A]> BC : {"t":"day","steps":N,...}
+SVC -[#B23A34]> BC : {"t":"hr","bpm":N} every 5s
+
+== Mirror ==
+
+BC -> HS2 : day record
+HS2 -> SINK : sum our own samples\nfor the watch's date
+
+alt store readable
+  SINK --> HS2 : have = M
+  note right of SINK
+    An empty day is reported as
+    errorNoData. That is zero,
+    not a failure — treating it as
+    one meant the first sample of
+    a new day was never written.
+  end note
+  alt N > M
+    HS2 -> SINK : write N − M
+    SINK -[#1DA34A]> HK : step sample
+  else N < M
+    HS2 -> SINK : delete our samples, write N
+    SINK -[#1DA34A]> HK : day replaced
+  end
+else phone locked / not authorised
+  SINK --> HS2 : errorDatabaseInaccessible
+  HS2 -> HS2 : keep the day queued
+  note right of HS2
+    Never dropped. Retried on the next
+    push, on unlock, on an authorisation
+    change, and on foreground.
+  end note
+end
+
+== When it goes quiet ==
+
+BC -> BC : no `day` for 20 min
+BC -> SVC : {"t":"sync"} (probe)
+BC -> BC : still nothing at 25 min
+BC -> SVC : drop connection
+note right of BC
+  Reconnecting forces a fresh discovery
+  and CCCD write — the part the watch
+  is waiting for.
+end note
+@enduml

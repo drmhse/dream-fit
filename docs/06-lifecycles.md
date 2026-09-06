@@ -1,5 +1,7 @@
 # 06 — Lifecycles
 
+![A day's steps reaching Apple Health](sequence.svg)
+
 Four state machines, two per end. They are written as machines because every
 link bug this project has had was the same shape: two variables disagreeing
 about one fact, with no name for the state they disagreed about.
@@ -78,3 +80,15 @@ Not a phase machine but a set of rules with one owner:
 - the hardware counter projects forward between aggregates, re-anchoring on
   every one, so a projected step is never counted twice
 - writes to storage are throttled, and forced before every push and on destroy
+
+## Redrawing the diagrams
+
+`architecture.puml` and `sequence.puml` share `style.puml`, and both render
+without graphviz thanks to PlantUML's smetana layout:
+
+```
+java -jar plantuml.jar -tsvg -o . docs/architecture.puml docs/sequence.puml
+```
+
+SVG rather than PNG on purpose: it is text, so a diff shows what changed in a
+diagram rather than that a binary blob moved.
