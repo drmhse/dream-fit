@@ -36,8 +36,6 @@ private val Steps = Color(0xFF30D158)
 private val Ember = Color(0xFFFF9F0A)
 private val Muted = Color(0xFF8E8E93)
 
-const val STEP_GOAL = 10_000
-
 @Composable
 fun DreamFitScreen() {
     MaterialTheme {
@@ -48,7 +46,7 @@ fun DreamFitScreen() {
                     // Step goal rides the bezel: the one number worth a glance
                     // without reading anything.
                     CircularProgressIndicator(
-                        progress = { (s.steps.toFloat() / STEP_GOAL).coerceIn(0f, 1f) },
+                        progress = { (s.steps.toFloat() / s.goal).coerceIn(0f, 1f) },
                         modifier = Modifier.fillMaxSize().padding(3.dp),
                         startAngle = 291f,
                         endAngle = 249f,
@@ -102,10 +100,12 @@ private fun Readout(s: WatchState.Snapshot) {
 
 @Composable
 private fun LinkPill(s: WatchState.Snapshot) {
-    val (tint, label) = when {
-        s.linked -> Steps to "iPhone"
-        s.running -> Ember to "searching"
-        else -> Muted to "off"
+    val (tint, label) = when (s.phase) {
+        LinkPhase.SUBSCRIBED -> Steps to "iPhone"
+        LinkPhase.ADVERTISING -> Ember to "advertising"
+        LinkPhase.RESTING -> Ember to "waiting"
+        LinkPhase.STARTING -> Muted to "starting"
+        LinkPhase.STOPPED -> Muted to "off"
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(6.dp).clip(CircleShape).background(tint))

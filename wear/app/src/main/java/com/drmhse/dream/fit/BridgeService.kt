@@ -1,12 +1,7 @@
 package com.drmhse.dream.fit
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.bluetooth.*
-import android.bluetooth.le.*
 import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
@@ -17,133 +12,85 @@ import android.os.BatteryManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.ParcelUuid
 import android.util.Log
 import androidx.health.services.client.HealthServices
 import androidx.health.services.client.data.DataType
 import androidx.health.services.client.data.PassiveListenerConfig
-import java.time.LocalDate
 import java.util.Collections
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import org.json.JSONObject
 
+// The link itself: sensors in, GATT out, and the phone's requests back the
+// other way. The day's numbers belong to DayLog, the tray to Tray and the
+// radio's duty cycle to Advertiser.
 class BridgeService : Service(), SensorEventListener {
     companion object {
         const val TAG = "DreamFit"
-        const val CALL_ID = 200
-        private const val ADV_BURST_MS = 30_000L
-        private const val ADV_REST_MS = 300_000L
+        const val ANSWER = "dreamfit.ANSWER"
+        const val DECLINE = "dreamfit.DECLINE"
+        const val DAILY = "dreamfit.DAILY"
         private const val DAY_HEARTBEAT_MS = 900_000L
         private const val DAY_DEBOUNCE_MS = 1_000L
         private const val HR_THROTTLE_MS = 5_000L
         private const val STEP_PUSH_MS = 60_000L
         private const val RX_MAX = 4_096
         private const val TX_QUEUE_MAX = 512
-        private const val EX_BPM = 110
-        private const val RHR_WINDOW_MS = 600_000L
     }
 
     private val handler = Handler(Looper.getMainLooper())
-    private val prefs by lazy { getSharedPreferences("dreamfit", MODE_PRIVATE) }
+    private lateinit var day: DayLog
+    private lateinit var settings: Settings
+    private lateinit var tray: Tray
+    private lateinit var advertiser: Advertiser
 
     override fun onBind(i: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
-        loadDay()
-        startForeground(1, fgNotification())
-        WatchState.update { it.copy(running = true) }
-        val mgr = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-        advertiser = mgr.adapter?.bluetoothLeAdvertiser
-        startGatt(mgr)
+        day = DayLog(this)
+        settings = Settings(this)
+        tray = Tray(this)
+        // The radio reports its own duty cycle, so ADVERTISING and RESTING are
+        // observed rather than assumed. A subscriber outranks both.
+        advertiser = Advertiser(this, handler) { on ->
+            if (notifyOn.isEmpty()) phase(if (on) LinkPhase.ADVERTISING else LinkPhase.RESTING)
+        }
+        startForeground(Tray.FOREGROUND_ID, tray.foregroundNotification())
+        phase(LinkPhase.STARTING)
+        startGatt(getSystemService(BLUETOOTH_SERVICE) as BluetoothManager)
         handler.post(burstLoop)
         handler.postDelayed(heartbeat, DAY_HEARTBEAT_MS)
         startSensors()
         registerPassive()
-        ancs = AncsClient(
-            this,
-            onNotif = { app, title, body, uidHex, cat ->
-                if (cat == 1) { activeCallUid = uidHex; showCall(title, uidHex) }
-                else AppNames.resolve(app).let { showNotify(title, body, it.name, it.icon, uidHex) }
-            },
-            onRemoved = { uidHex ->
-                if (uidHex == activeCallUid) { activeCallUid = null; cancelCall() }
-                notifIds.remove(uidHex)?.let { nm().cancel(it) }
-            },
-        ).also { runCatching { it.start() } }
+        startAncs()
     }
 
     override fun onStartCommand(i: Intent?, f: Int, s: Int): Int {
         when (i?.action) {
-            "dreamfit.ANSWER" -> { ancs?.performAction(i.getStringExtra("uid").orEmpty(), true); cancelCall() }
-            "dreamfit.DECLINE" -> { ancs?.performAction(i.getStringExtra("uid").orEmpty(), false); cancelCall() }
-            "dreamfit.DAILY" -> onDailySteps(i.getIntExtra("total", -1))
+            ANSWER -> { ancs?.performAction(i.getStringExtra("uid").orEmpty(), true); tray.cancelCall() }
+            DECLINE -> { ancs?.performAction(i.getStringExtra("uid").orEmpty(), false); tray.cancelCall() }
+            DAILY -> if (day.applyDailyTotal(i.getIntExtra("total", -1))) scheduleDayPush()
         }
         return START_STICKY
     }
 
     override fun onDestroy() {
-        WatchState.update { it.copy(running = false, linked = false) }
+        phase(LinkPhase.STOPPED)
+        day.flush()
         runCatching { ancs?.stop() }
         handler.removeCallbacksAndMessages(null)
         runCatching { sensorMgr?.unregisterListener(this) }
-        stopAdv()
+        advertiser.stop()
         runCatching { gattServer?.close() }
         super.onDestroy()
     }
 
-    // ---- day record: the watch is the sole authority for daily aggregates ----
-    // One prefs key, reset on rollover. Steps are monotonic (Health Services
-    // replays stale daily snapshots out of order); RHR is the day's minimum.
-
-    private var dayDate = ""
-    private var daySteps = 0
-    private var dayRhr = 0
-    private var dayExMin = 0
-
-    private fun loadDay() {
-        val parts = prefs.getString("day", "")?.split("|").orEmpty()
-        if (parts.size == 4) {
-            dayDate = parts[0]
-            daySteps = parts[1].toIntOrNull() ?: 0
-            dayRhr = parts[2].toIntOrNull() ?: 0
-            dayExMin = parts[3].toIntOrNull() ?: 0
-        }
-        rollDay()
-        WatchState.update { it.copy(steps = daySteps, exMin = dayExMin) }
-    }
-
-    private fun rollDay() {
-        val today = LocalDate.now().toString()
-        if (dayDate == today) return
-        dayDate = today; daySteps = 0; dayRhr = 0; dayExMin = 0
-        stepBase = 0; stepAnchor = lastCounter
-        saveDay()
-    }
-
-    private fun saveDay() {
-        prefs.edit().putString("day", "$dayDate|$daySteps|$dayRhr|$dayExMin").apply()
-        WatchState.update { it.copy(steps = daySteps, exMin = dayExMin) }
-    }
-
-    private fun onDailySteps(total: Int) {
-        if (total < 0) return
-        rollDay()
-        // The aggregate is the authority, but Health Services replays stale
-        // daily snapshots out of order, so it may only ever raise the total.
-        if (total > daySteps) daySteps = total
-        // Re-anchor either way. The projection below always continues from the
-        // reported total, so steps the aggregate already counted are never
-        // added a second time — which is what broke live deltas before.
-        stepBase = daySteps
-        stepAnchor = lastCounter
-        saveDay()
-        scheduleDayPush()
-    }
+    // ---- day pushes ----
 
     private val dayPush = Runnable {
-        send("""{"t":"day","d":"$dayDate","steps":$daySteps,"rhr":$dayRhr,"exmin":$dayExMin,"bat":${batteryPct()}}""")
+        day.flush()
+        send(day.json(batteryPct()))
     }
 
     private fun scheduleDayPush() {
@@ -151,13 +98,17 @@ class BridgeService : Service(), SensorEventListener {
         handler.postDelayed(dayPush, DAY_DEBOUNCE_MS)
     }
 
+    // The absolute is idempotent, so a heartbeat costs one small notification
+    // and buys the phone a ceiling on how stale it can ever be.
     private val heartbeat = object : Runnable {
         override fun run() {
-            rollDay()
+            day.roll()
             scheduleDayPush()
             handler.postDelayed(this, DAY_HEARTBEAT_MS)
         }
     }
+
+    private fun phase(p: LinkPhase) = WatchState.update { it.copy(phase = p) }
 
     private fun batteryPct() =
         getSystemService(BatteryManager::class.java)?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: -1
@@ -167,15 +118,6 @@ class BridgeService : Service(), SensorEventListener {
     private var sensorMgr: SensorManager? = null
     private var lastHr = 0
     private var lastHrPush = 0L
-    private val hrWindow = ArrayDeque<Pair<Long, Int>>()
-    private var lastExMark = 0L
-
-    // Health Services batches STEPS_DAILY to save power, so the aggregate can
-    // trail the watch's own summary by minutes. The hardware step counter fills
-    // that gap between aggregates; it is a projection, never an authority.
-    private var stepAnchor: Float? = null
-    private var stepBase = 0
-    private var lastCounter: Float? = null
     private var lastStepPush = 0L
 
     private fun startSensors() {
@@ -197,27 +139,16 @@ class BridgeService : Service(), SensorEventListener {
         }
     }
 
+    override fun onAccuracyChanged(s: Sensor?, a: Int) = Unit
+
     private fun onStepCounter(e: SensorEvent) {
         val counter = e.values.getOrNull(0) ?: return
-        lastCounter = counter
-        rollDay()
-        val anchor = stepAnchor
-        // First reading, or the counter reset on reboot: anchor, never project.
-        if (anchor == null || counter < anchor) {
-            stepAnchor = counter
-            stepBase = daySteps
-            return
-        }
-        val projected = stepBase + (counter - anchor).toInt()
-        if (projected <= daySteps) return
-        daySteps = projected
-        saveDay()
+        if (!day.applyCounter(counter)) return
         // The watch face updates instantly (in-process); the radio does not.
         val now = System.currentTimeMillis()
-        if (now - lastStepPush >= STEP_PUSH_MS) {
-            lastStepPush = now
-            scheduleDayPush()
-        }
+        if (now - lastStepPush < STEP_PUSH_MS) return
+        lastStepPush = now
+        scheduleDayPush()
     }
 
     private fun onHeartRate(e: SensorEvent) {
@@ -229,26 +160,7 @@ class BridgeService : Service(), SensorEventListener {
         lastHr = bpm
         send("""{"t":"hr","bpm":$bpm}""")
         WatchState.update { it.copy(bpm = bpm) }
-        deriveDaily(now, bpm)
-    }
-
-    override fun onAccuracyChanged(s: Sensor?, a: Int) = Unit
-
-    // Resting HR = the day's lowest 10-minute-window minimum. Exercise minutes
-    // accrue one per minute spent above EX_BPM (crude zone gate, no weight model).
-    private fun deriveDaily(now: Long, bpm: Int) {
-        rollDay()
-        var changed = false
-        hrWindow.addLast(now to bpm)
-        while (hrWindow.isNotEmpty() && now - hrWindow.first().first > RHR_WINDOW_MS) hrWindow.removeFirst()
-        if (hrWindow.size >= 12) {
-            val rhr = hrWindow.minOf { it.second }
-            if (dayRhr == 0 || rhr < dayRhr) { dayRhr = rhr; changed = true }
-        }
-        if (bpm >= EX_BPM && now - lastExMark > 60_000) {
-            lastExMark = now; dayExMin++; changed = true
-        }
-        if (changed) { saveDay(); scheduleDayPush() }
+        if (day.applyBpm(now, bpm)) scheduleDayPush()
     }
 
     private fun registerPassive() {
@@ -260,57 +172,39 @@ class BridgeService : Service(), SensorEventListener {
         }.onFailure { Log.w(TAG, "passive", it) }
     }
 
-    // ---- advertising ----
+    // ---- tray ----
 
-    private var advertiser: BluetoothLeAdvertiser? = null
-    private var advCallback: AdvertiseCallback? = null
-    private var advRunning = false
+    private var ancs: AncsClient? = null
+    private var activeCallUid: String? = null
 
-    private val advStop = Runnable { stopAdv() }
+    private fun startAncs() {
+        ancs = AncsClient(
+            this,
+            onNotif = { app, title, body, uidHex, cat ->
+                if (cat == 1) {
+                    activeCallUid = uidHex
+                    tray.showCall(title, uidHex)
+                } else {
+                    AppNames.resolve(app).let { tray.showNotify(title, body, it.name, it.icon, uidHex) }
+                }
+            },
+            onRemoved = { uidHex ->
+                if (uidHex == activeCallUid) { activeCallUid = null; tray.cancelCall() }
+                tray.cancelFor(uidHex)
+            },
+        ).also { runCatching { it.start() } }
+    }
+
+    // ---- advertising duty cycle ----
 
     // Gate on OUR subscribers, never on raw connections: after iPhone pairing
     // the system holds an ANCS/HFP link permanently, which would otherwise
     // suppress discovery of our service forever.
     private val burstLoop = object : Runnable {
         override fun run() {
-            if (notifyOn.isEmpty()) burstNow()
-            handler.postDelayed(this, ADV_BURST_MS + ADV_REST_MS)
+            if (notifyOn.isEmpty()) advertiser.burst()
+            handler.postDelayed(this, Advertiser.BURST_MS + Advertiser.REST_MS)
         }
-    }
-
-    private fun burstNow() = handler.post {
-        startAdv()
-        handler.removeCallbacks(advStop)
-        handler.postDelayed(advStop, ADV_BURST_MS)
-    }
-
-    private fun advOff() = handler.post {
-        handler.removeCallbacks(advStop)
-        stopAdv()
-    }
-
-    private fun startAdv() {
-        if (advRunning) return
-        val adv = advertiser ?: return
-        val settings = AdvertiseSettings.Builder()
-            .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_POWER)
-            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_LOW)
-            .setConnectable(true).setTimeout(0).build()
-        val data = AdvertiseData.Builder()
-            .addServiceUuid(ParcelUuid(UUID.fromString(BridgeGatt.SERVICE)))
-            .setIncludeDeviceName(false).build()
-        val scanResp = AdvertiseData.Builder().setIncludeDeviceName(true).build()
-        advCallback = object : AdvertiseCallback() {
-            override fun onStartSuccess(s: AdvertiseSettings?) { advRunning = true; Log.d(TAG, "adv on") }
-            override fun onStartFailure(e: Int) { advRunning = false; Log.w(TAG, "adv fail $e") }
-        }
-        runCatching { adv.startAdvertising(settings, data, scanResp, advCallback) }
-            .onFailure { Log.w(TAG, "adv start", it) }
-    }
-
-    private fun stopAdv() {
-        runCatching { advCallback?.let { advertiser?.stopAdvertising(it) } }
-        advRunning = false
     }
 
     // ---- GATT server ----
@@ -324,20 +218,27 @@ class BridgeService : Service(), SensorEventListener {
     private fun startGatt(mgr: BluetoothManager) {
         gattServer = mgr.openGattServer(this, serverCallback)
         val svc = BluetoothGattService(UUID.fromString(BridgeGatt.SERVICE), BluetoothGattService.SERVICE_TYPE_PRIMARY)
+        // Encrypted and MITM-protected, not plain. The stack refuses every read,
+        // write and subscribe until the link is encrypted with the bond keys, so
+        // heart rate and step counts never cross the air in the clear and nobody
+        // in radio range can connect and read them.
         svc.addCharacteristic(
             BluetoothGattCharacteristic(
                 UUID.fromString(BridgeGatt.RX),
                 BluetoothGattCharacteristic.PROPERTY_WRITE or BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE,
-                BluetoothGattCharacteristic.PERMISSION_WRITE,
+                BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED_MITM,
             ),
         )
         txChar = BluetoothGattCharacteristic(
             UUID.fromString(BridgeGatt.TX), BluetoothGattCharacteristic.PROPERTY_NOTIFY, 0,
         ).apply {
+            // Subscribing is the gate for the whole notify stream: an encrypted
+            // CCCD means the link is encrypted before a single beat is sent.
             addDescriptor(
                 BluetoothGattDescriptor(
                     UUID.fromString(BridgeGatt.CCCD),
-                    BluetoothGattDescriptor.PERMISSION_READ or BluetoothGattDescriptor.PERMISSION_WRITE,
+                    BluetoothGattDescriptor.PERMISSION_READ_ENCRYPTED_MITM
+                        or BluetoothGattDescriptor.PERMISSION_WRITE_ENCRYPTED_MITM,
                 ),
             )
         }
@@ -349,11 +250,11 @@ class BridgeService : Service(), SensorEventListener {
         override fun onConnectionStateChange(dev: BluetoothDevice?, status: Int, newState: Int) {
             if (newState != BluetoothProfile.STATE_DISCONNECTED || dev == null) return
             notifyOn.remove(dev)
-            WatchState.update { it.copy(linked = notifyOn.isNotEmpty()) }
+            if (notifyOn.isEmpty()) phase(LinkPhase.RESTING)
             synchronized(txLock) { txQueue.removeAll { it.first == dev } }
             mtus.remove(dev.address)
             rxBuf.remove(dev.address)
-            if (notifyOn.isEmpty()) burstNow()
+            if (notifyOn.isEmpty()) advertiser.burst()
         }
 
         override fun onMtuChanged(dev: BluetoothDevice?, mtu: Int) {
@@ -368,14 +269,14 @@ class BridgeService : Service(), SensorEventListener {
             if (dev == null) return
             if (value?.any { it != 0.toByte() } == true) {
                 notifyOn.add(dev)
-                WatchState.update { it.copy(linked = true) }
-                advOff()
+                phase(LinkPhase.SUBSCRIBED)
+                advertiser.off()
                 Log.d(TAG, "subscribed, adv off")
                 if (lastHr > 0) send("""{"t":"hr","bpm":$lastHr}""")
                 scheduleDayPush()
             } else {
                 notifyOn.remove(dev)
-                WatchState.update { it.copy(linked = notifyOn.isNotEmpty()) }
+                if (notifyOn.isEmpty()) phase(LinkPhase.RESTING)
             }
         }
 
@@ -406,8 +307,9 @@ class BridgeService : Service(), SensorEventListener {
 
     private fun handlePhoneMsg(msg: String) {
         val obj = runCatching { JSONObject(msg) }.getOrNull() ?: return
-        if (obj.optString("t") == "notify") {
-            showNotify(obj.optString("title").ifEmpty { "iPhone" }, obj.optString("body"))
+        when (obj.optString("t")) {
+            "notify" -> tray.showNotify(obj.optString("title").ifEmpty { "iPhone" }, obj.optString("body"))
+            "goal" -> obj.optInt("steps", 0).takeIf { it > 0 }?.let { settings.stepGoal = it }
         }
         // Any inbound message doubles as a sync request: the phone asks by
         // writing, and gets the current day snapshot back.
@@ -439,6 +341,8 @@ class BridgeService : Service(), SensorEventListener {
         pump()
     }
 
+    // Without-response writes are silently discarded once the queue is full;
+    // a partial message means the watch never sees a newline.
     private fun pump() {
         val next = synchronized(txLock) {
             if (txBusy) return
@@ -458,84 +362,4 @@ class BridgeService : Service(), SensorEventListener {
             Log.w(TAG, "notify failed, backlog dropped")
         }
     }
-
-    // ---- watch tray ----
-
-    private var ancs: AncsClient? = null
-    private var activeCallUid: String? = null
-    private var notifId = 100
-    private val notifIds = mutableMapOf<String, Int>()
-    private val groupCount = mutableMapOf<String, Int>()
-
-    private fun nm() = getSystemService(NotificationManager::class.java)
-
-    private fun channel(id: String, name: String, importance: Int) {
-        nm().createNotificationChannel(NotificationChannel(id, name, importance))
-    }
-
-    private fun fgNotification(): Notification {
-        channel("bridge", "Dream Fit bridge", NotificationManager.IMPORTANCE_MIN)
-        return Notification.Builder(this, "bridge")
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText("iPhone link active")
-            .setSmallIcon(R.drawable.ic_stat_dreamfit)
-            .build()
-    }
-
-    // The tray header always shows the posting app (only the system bridge can
-    // stamp another package's identity, and that needs GMS), so the source app
-    // goes in the title line itself.
-    private fun showNotify(
-        title: String,
-        body: String,
-        app: String = "iPhone",
-        icon: Int = R.drawable.ic_stat_dreamfit,
-        uidHex: String? = null,
-    ) {
-        channel("phone", "iPhone alerts", NotificationManager.IMPORTANCE_HIGH)
-        val color = when (app) {
-            "WhatsApp", "Messages", "Phone" -> 0xFF34C759.toInt()
-            "Gmail", "Mail" -> 0xFFEA4335.toInt()
-            else -> 0xFF0A84FF.toInt()
-        }
-        val group = "app:$app"
-        val id = notifId++
-        uidHex?.let { notifIds[it] = id }
-        nm().notify(
-            id,
-            Notification.Builder(this, "phone")
-                .setContentTitle("$app • $title").setContentText(body)
-                .setSmallIcon(icon).setColor(color).setColorized(true)
-                .setGroup(group).build(),
-        )
-        val count = groupCount.merge(group, 1) { a, b -> a + b } ?: 1
-        nm().notify(
-            group.hashCode(),
-            Notification.Builder(this, "phone")
-                .setContentTitle(app).setContentText("$count new")
-                .setSmallIcon(icon).setColor(color).setColorized(true)
-                .setGroup(group).setGroupSummary(true).build(),
-        )
-    }
-
-    private fun showCall(caller: String, uidHex: String) {
-        channel("calls", "Phone calls", NotificationManager.IMPORTANCE_HIGH)
-        fun act(action: String, offset: Int) = PendingIntent.getService(
-            this, uidHex.hashCode() + offset,
-            Intent(this, BridgeService::class.java).setAction(action).putExtra("uid", uidHex),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
-        nm().notify(
-            CALL_ID,
-            Notification.Builder(this, "calls")
-                .setContentTitle("Incoming call").setContentText(caller)
-                .setSmallIcon(android.R.drawable.sym_action_call)
-                .setCategory(Notification.CATEGORY_CALL)
-                .addAction(Notification.Action.Builder(null, "Answer", act("dreamfit.ANSWER", 0)).build())
-                .addAction(Notification.Action.Builder(null, "Decline", act("dreamfit.DECLINE", 1)).build())
-                .setOngoing(true).build(),
-        )
-    }
-
-    private fun cancelCall() = nm().cancel(CALL_ID)
 }

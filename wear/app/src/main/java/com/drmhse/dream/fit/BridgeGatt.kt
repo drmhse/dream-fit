@@ -12,6 +12,11 @@ package com.drmhse.dream.fit
 //
 // The watch owns every daily aggregate: `day` is absolute, idempotent, and
 // carries the watch's own local date so the phone never guesses a boundary.
+//
+// Every characteristic here requires an encrypted, MITM-protected link. The
+// bond the phone already holds for ANCS satisfies that, so this costs nothing
+// at runtime — but it means the service is unreachable to anything that is not
+// this paired phone. Health data does not travel in the clear.
 object BridgeGatt {
     const val SERVICE = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
     const val RX = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E" // phone -> watch, write
