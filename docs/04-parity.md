@@ -18,7 +18,7 @@ Goal: Pixel Watch 4 on iPhone feeling like Pixel 9 + Watch. Honest ledger.
 
 ## Ready, one Xcode tap away (code written, profile wiped by regen)
 - iOS HealthKit sink (`HealthStore.swift`): HR, resting HR + steps to Apple Health, auth + live ❤/steps in UI
-- Why blocked: xcodegen regen needs Team re-pick to mint the HealthKit profile. Open `dream-fit/ios/DreamFit.xcodeproj` → DreamFit target → Signing & Capabilities → Team Mike Chumba, then tell the builder to install.
+- Why blocked: xcodegen regen needs Team re-pick to mint the HealthKit profile. Open `dream-fit/ios/DreamFit.xcodeproj` → DreamFit target → Signing & Capabilities → pick your Apple Developer team to mint the HealthKit profile, then build to device.
 
 ## Next (watch code ships, needs iPhone Settings > Bluetooth pair)
 - System notifications via ANCS (`AncsClient.kt` skeleton in): iPhone exposes Apple Notification Center Service to bonded accessories. Pair the watch as a BT accessory, our app subscribes to Notification Source/Data Source → all iPhone notifications on wrist, with reply/decline actions. No iOS app change needed.

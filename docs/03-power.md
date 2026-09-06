@@ -1,6 +1,6 @@
 # 03 — Power: why the bridge doesn't move the needle
 
-Measured 2026-09-05, Pixel Watch 4 (kenari, 325mAh/41mm class), Wear node db397e60.
+Measured 2026-09-05, Pixel Watch 4 (kenari, 325mAh/41mm class), Wear node <watch-node>.
 
 ## What we changed (v0 → v1)
 - v0 (lab only): `LOW_LATENCY` (100ms interval) + `TX MEDIUM` (~0dBm), always-on → ~5–10mA while advertising. Would have been visible on battery. Deleted.

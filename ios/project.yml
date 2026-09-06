@@ -4,8 +4,9 @@ options:
     iOS: "17.0"
   xcodeVersion: "16.0"
 settings:
-  DEVELOPMENT_TEAM: SJRM8TVZYF
   CODE_SIGN_STYLE: Automatic
+  # Signing team is picked in Xcode after regen (Signing & Capabilities),
+  # so no DEVELOPMENT_TEAM lives in this repo.
 targets:
   DreamFit:
     type: application

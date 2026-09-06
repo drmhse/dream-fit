@@ -38,7 +38,7 @@ BluetoothAdapterProperties
 
 BluetoothRemoteDevices
   Bonded devices: 1
-    XX:XX:XX:XX:A9:3F(Public ) => XX:XX:XX:XX:A9:3F(Public ) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: 3 LE: 3] [ACL BR/EDR:Y LE:N] [ Encryption status(BR/EDR): EncryptionStatus{keySize=16, algorithm=2] LE: N/A] Pixel Watch 4 40EW
+    XX:XX:XX:XX:A9:3F(Public ) => XX:XX:XX:XX:A9:3F(Public ) [ DUAL ] [0x001F00] [Pairing Algorithm BR/EDR: 3 LE: 3] [ACL BR/EDR:Y LE:N] [ Encryption status(BR/EDR): EncryptionStatus{keySize=16, algorithm=2] LE: N/A] Pixel Watch 4
         [BR/EDR UUIDs]: 0000110a-0000-1000-8000-00805f9b34fb 0000110e-0000-1000-8000-00805f9b34fb 0000111e-0000-1000-8000-00805f9b34fb 0000111f-0000-1000-8000-00805f9b34fb df21fe2c-2515-4fdb-8886-f12c4d67927c
         [Packages    ]: [com.google.android.apps.wear.companion]
 
@@ -65,10 +65,10 @@ BluetoothActiveDeviceManager
     Most recent: NULL
   HFP:
     Connected count: 1
-      XX:XX:XX:XX:A9:3F: Pixel Watch 4 40EW
+      XX:XX:XX:XX:A9:3F: Pixel Watch 4
     Active: NULL
     Fallback: NULL
-    Most recent: XX:XX:XX:XX:A9:3F: Pixel Watch 4 40EW
+    Most recent: XX:XX:XX:XX:A9:3F: Pixel Watch 4
   HA:
     Connected count: 0
     Active: 0
@@ -1098,35 +1098,35 @@ LE Scanner Map:
           SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
           --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
           LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
-        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+        └ Filter: [ DeviceAddress=XX:XX:XX:XX:A9:3F ]
       [09-04 17:35:21.377 --> 09-04 17:35:26.858] (Duration: 5481ms)
         └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (3) | CB Regular Scan
         └ App Importance: Higher than Foreground Service
           SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
           --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
           LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
-        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+        └ Filter: [ DeviceAddress=XX:XX:XX:XX:A9:3F ]
       [09-04 17:35:26.877 --> 09-05 06:41:05.814] (Duration: 47138937ms)
         └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (3) | CB Regular Scan
         └ App Importance: Higher than Foreground Service
           SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
           --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
           LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
-        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+        └ Filter: [ DeviceAddress=XX:XX:XX:XX:A9:3F ]
       [09-05 06:42:04.717 --> 09-05 06:48:58.753] (Duration: 414036ms)
         └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (1) | CB Regular Scan
         └ App Importance: Higher than Foreground Service
           SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
           --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
           LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
-        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+        └ Filter: [ DeviceAddress=XX:XX:XX:XX:A9:3F ]
       [09-05 06:51:51.715 --> 09-05 06:56:12.709] (Duration: 260994ms)
         └ Info: (Back) (Filter) Results: (0 / 0 / 0) | id: (1) | CB Regular Scan
         └ App Importance: Higher than Foreground Service
           SCAN_MODE CALLBACK_TYPE        RESULT_TYPE DELAY_MS MATCH_MODE NUM_MATCHES LEGACY PHY RSSI SCAN_TYPE
           --------- -------------------- ----------- -------- ---------- ----------- ------ --- ---- ---------
           LOW_POWER [FIRST_MATCH | LOST] FULL        0        AGGRESSIVE FEW         true   1M  -128 ACTIVE
-        └ Filter: [ DeviceAddress=64:9D:38:22:A9:3F ]
+        └ Filter: [ DeviceAddress=XX:XX:XX:XX:A9:3F ]
 
 Native:
   hci_instance_name: default
@@ -1401,7 +1401,7 @@ shim::legacy::sdp peer:xx:xx:xx:xx:a9:3f discovery_state:SDP_DISC_WAIT_SEARCH_AT
 shim::legacy::sdp   connection_state:tSDP_STATE::IDLE(0x0) connection_flags:0x01 mtu:0 l2cap_cid:80
 shim::legacy::sdp peer:xx:xx:xx:xx:a9:3f discovery_state:SDP_DISC_WAIT_CONN
 shim::legacy::sdp   connection_state:tSDP_STATE::IDLE(0x0) connection_flags:0x00 mtu:1024 l2cap_cid:70
-shim::record 001 xx:xx:xx:xx:a9:3f DUAL   cod:0-1f-0 remote_info:14-08714-00015 sm4:0x11 SecureConn:T name:"Pixel Watch 4 40EW" sec_prop:bredr_linkkey_known:T,le_linkkey_known:T,bond_type:BOND_TYPE_PERSISTENT,bredr_linkkey_type:AUTH_COMB_P_256,ble_enc_key_size:16,le_enc_key_size:0,bredr_authenticated:T,le_authenticated:F,16_digit_key_authenticated:T,bredr_encrypted:T,le_encrypted:F, pairing_algorithm:PairingAlgorithm::SC(0x4), ble_pairing_algorithm:PairingAlgorithm::SC(0x4), in_resolving_list: T
+shim::record 001 xx:xx:xx:xx:a9:3f DUAL   cod:0-1f-0 remote_info:14-08714-00015 sm4:0x11 SecureConn:T name:"Pixel Watch 4" sec_prop:bredr_linkkey_known:T,le_linkkey_known:T,bond_type:BOND_TYPE_PERSISTENT,bredr_linkkey_type:AUTH_COMB_P_256,ble_enc_key_size:16,le_enc_key_size:0,bredr_authenticated:T,le_authenticated:F,16_digit_key_authenticated:T,bredr_encrypted:T,le_encrypted:F, pairing_algorithm:PairingAlgorithm::SC(0x4), ble_pairing_algorithm:PairingAlgorithm::SC(0x4), in_resolving_list: T
  ----- shim::legacy::l2cap -----
 shim::legacy::l2cap link_state:LST_CONNECTED(0x4)
 shim::legacy::l2cap handle:0x000b
