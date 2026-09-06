@@ -1,69 +1,43 @@
 @startuml architecture
-!pragma layout smetana
 !include style.puml
 hide stereotype
-title Dream Fit — Pixel Watch 4 ↔ iPhone
+title Dream Fit — Pixel Watch 4 to iPhone
 
-package "Pixel Watch 4 · Wear OS" as WATCHBOX {
+skinparam nodesep 22
+skinparam ranksep 34
+
+package "Pixel Watch 4 · Wear OS" as W {
   component "Health Services\nSTEPS_DAILY" as HS <<ext>>
-  component "Sensors\nheart rate · step counter" as SENSORS <<ext>>
-  component "PassiveDataService" as PASSIVE <<watch>>
-  component "DayLog\nsteps · resting HR · exercise\nrollover + projection" as DAYLOG <<watch>>
-  component "Settings\nstep goal" as WSET <<watch>>
-  component "BridgeService\nGATT server · TX queue\nlink phases" as SVC <<watch>>
-  component "Advertiser\n30s burst / 5min rest" as ADV <<watch>>
-  component "AncsClient" as ANCS <<watch>>
-  component "Tray\nnotifications · call actions" as TRAY <<watch>>
-  component "WatchState" as WSTATE <<watch>>
-  component "DreamFitScreen\nCompose" as WUI <<watch>>
+  component "Sensors\nheart rate · step counter" as SENS <<ext>>
+  component "DayLog\nsteps · resting HR · exercise\nthe day's only truth" as DAYLOG <<watch>>
+  component "BridgeService\nGATT server · link phases" as SVC <<watch>>
+  component "Advertiser\n30s burst, 5min rest" as ADV <<watch>>
+  component "AncsClient + Tray\nnotifications · call actions" as TRAY <<watch>>
+  component "DreamFitScreen" as WUI <<watch>>
 
-  HS --> PASSIVE : daily aggregate
-  PASSIVE --> DAYLOG : absolute total
-  SENSORS --> DAYLOG : projection\nbetween aggregates
-  SENSORS --> SVC : heart rate (5s)
-  DAYLOG --> SVC : day record
-  WSET --> SVC
-  SVC --> ADV : off while subscribed
-  SVC --> WSTATE
-  DAYLOG --> WSTATE
-  WSTATE --> WUI
-  ANCS --> TRAY
+  HS -[#1DA34A]-> DAYLOG : absolute total
+  SENS -[#1DA34A]-> DAYLOG : projection
+  SENS -[#B23A34]-> SVC : heart rate
+  DAYLOG -[#1DA34A]-> SVC : day record
+  DAYLOG -[#8E8E93]-> WUI
+  SVC -[#8E8E93]-> ADV : off while subscribed
+  ' Tray has no inbound edge of its own, so without this dot ranks it at the
+  ' top of the cluster and the ANCS arrow crosses the whole diagram.
+  SVC -[hidden]-> TRAY
 }
 
-package "iPhone · iOS" as PHONEBOX {
-  component "iOS ANCS" as IOSANCS <<ext>>
-  component "BridgeCentral\nCoreBluetooth central\nLinkPhase state machine" as BC <<phone>>
-  component "WatchEvent\nwire decode · day bounds" as EVENT <<phone>>
-  component "HealthStore\nsnapshot · step mirror\nqueue + retry" as STORE <<phone>>
-  component "HealthKitSink\nasync HealthKit" as SINK <<phone>>
+package "iPhone · iOS" as P {
+  component "BridgeCentral\nLinkPhase state machine" as BC <<phone>>
+  component "HealthStore + HealthKitSink\nstep mirror · queue + retry" as STORE <<phone>>
   component "ContentView\nring · chart · goal" as UI <<phone>>
-  component "Diagnostics\nin-app + system log" as DIAG <<phone>>
   component "Apple Health" as HK <<ext>>
+  component "iOS ANCS" as IOSANCS <<ext>>
 
-  BC --> EVENT : lines
-  EVENT --> STORE : hr · day
-  STORE --> SINK : reconcile
-  SINK --> HK : steps · HR · resting HR
-  STORE --> UI
-  BC --> UI : link phase
-  UI --> STORE : step goal
-  STORE --> BC : goal push
-  BC ..> DIAG
-  STORE ..> DIAG
+  BC -[#0A6ED1]-> STORE : hr · day
+  STORE -[#0A6ED1]-> HK : read own samples,\nwrite the difference
+  STORE <-[#8E8E93]-> UI : facts / step goal
 }
 
-SVC <-[#0A6ED1,thickness=2]-> BC : **GATT 6E400001**\nTX notify: hr · day\nRX write: notify · sync · goal
-ANCS <-[#6E6E73,dashed]- IOSANCS : **ANCS** — every iPhone notification
-
-note bottom of SVC
-  Both links ride one bond. Every
-  characteristic requires an encrypted,
-  MITM-protected connection.
-end note
-
-note right of STORE
-  The watch owns every daily total.
-  HealthKit is a mirror reconciled
-  against it, never an accumulator.
-end note
+SVC <-[#0A6ED1,thickness=3]-> BC : **encrypted GATT**\nhr, day / sync, goal
+IOSANCS -[#8E8E93,dashed]-> TRAY : ANCS
 @enduml

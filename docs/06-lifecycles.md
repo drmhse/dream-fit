@@ -83,8 +83,9 @@ Not a phase machine but a set of rules with one owner:
 
 ## Redrawing the diagrams
 
-`architecture.puml` and `sequence.puml` share `style.puml`, and both render
-without graphviz thanks to PlantUML's smetana layout:
+`architecture.puml` and `sequence.puml` share `style.puml`. Graphviz does the
+layout; PlantUML's built in smetana fallback routes edges badly enough that the
+architecture diagram came out as a tangle:
 
 ```
 java -jar plantuml.jar -tsvg -o . docs/architecture.puml docs/sequence.puml
