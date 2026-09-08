@@ -17,8 +17,17 @@ Goal: Pixel Watch 4 on iPhone feeling like Pixel 9 + Watch. Honest ledger.
   state; service publishes `WatchState` in-process, so no prefs or broadcast
   hop between a reading and the screen (prefs hold the durable day record)
 - Derived metrics on-watch: resting HR = the day's lowest 10-minute-window
-  minimum; exercise minutes = one per minute above 110 bpm; battery % rides
-  every `day` push
+  minimum, over twelve samples or not at all; battery % rides every `day` push.
+  Exercise minutes are not reported: `USER_ACTIVITY_EXERCISE` never fired for a
+  measured 30-minute walk, so the figure was zero for a real walk
+- Sleep sessions from `USER_ACTIVITY_ASLEEP`, and daily distance and floors
+  from Health Services passive monitoring — shown on both screens and mirrored
+  to Apple Health. Calories are not collected at all (they include BMR and
+  cannot be honestly mirrored; see `01-protocol.md`). No sensor is powered for
+  any of it
+- The PPG is never held open: doing so cost ~7.8mA and roughly halved battery
+  life (`03-power.md`). The only raw sensor left is off-body detection, which
+  Health Services does not report and which sleep depends on
 - System notifications, implemented, awaiting pairing: `AncsClient.kt` is a
   complete client, not a stub — bonded-iPhone lookup, serialised subscribe to
   Notification + Data Source, per-event attribute fetch (app/title/subtitle/

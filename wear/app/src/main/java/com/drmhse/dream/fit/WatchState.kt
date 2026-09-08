@@ -21,9 +21,21 @@ object WatchState {
     data class Snapshot(
         val bpm: Int = 0,
         val steps: Int = 0,
-        val exMin: Int = 0,
+        val distanceM: Int = 0,
+        val floors: Int = 0,
+        // Minutes in the night the watch last closed, 0 when there is none
+        // recent enough to still be last night.
+        val sleepMin: Int = 0,
         val goal: Int = Settings.DEFAULT_GOAL,
         val phase: LinkPhase = LinkPhase.STOPPED,
+        // Set only when Health Services has actually told us it dropped the
+        // passive registration (onPermissionLost), never from inspecting a
+        // permission. On this watch BODY_SENSORS is folded into the HEALTH
+        // group ("Fitness and wellness") and the background variant is not
+        // offered anywhere in the UI, so a warning driven by a permission check
+        // would nag about something the wearer cannot grant — while passive
+        // data was in fact flowing.
+        val ambientBlocked: Boolean = false,
     )
 
     private val _state = MutableStateFlow(Snapshot())

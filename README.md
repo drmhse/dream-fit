@@ -17,8 +17,11 @@ central, and daily health data flows as absolute, idempotent messages.
   JSON, flow-controlled in both directions, and gated on an encrypted,
   MITM-protected link. Full contract: `docs/01-protocol.md`
   (canonical definition: `wear/…/BridgeGatt.kt`).
-- **Data model:** the **watch owns every daily aggregate**. `day` messages are
-  absolute (`steps`, resting HR, exercise minutes, battery + the watch's own
+- **Data model:** the **watch owns every daily aggregate**, and movement is
+  reported twice over on purpose: `delta` messages carry the span each interval
+  of steps, distance or floors happened in, so Apple Health can merge them
+  against the iPhone's own reading of the same walk, and `day` messages are
+  absolute (`steps`, distance, floors, resting HR, battery + the watch's own
   local date), sent on subscribe, on change (debounced) and on a 15-minute
   heartbeat. The phone treats HealthKit as a mirror to reconcile against that
   total — never as an accumulator — so repeats, reconnects and out-of-order
@@ -29,28 +32,40 @@ central, and daily health data flows as absolute, idempotent messages.
   every iPhone notification on the wrist over ANCS — per-app identity, grouped
   summaries, and answer/decline for incoming calls — riding the same bond the
   GATT service requires.
-- **Power:** `LOW_POWER` advertising (~1 s interval, room-scale TX), 30 s burst /
-  5 min rest, advertising off while subscribed, everything event-driven —
-  ≈0.06 mA average, ~0.15 % of a charge per day. See `docs/03-power.md`.
-- **UI:** SwiftUI on iPhone (settable step-goal ring, live HR chart, permission banners),
-  Compose for Wear OS on the watch (step goal, HR, link state).
+- **Power:** the app holds no sensor to watch a number the platform already
+  measures. Ambient steps and heart rate come from Health Services passive
+  monitoring; the PPG is powered via `MeasureClient` only while the phone is
+  subscribed or the screen is up, on a 120 s deadline. The radio adds ≈0.06 mA
+  (`LOW_POWER` advertising, 30 s burst / 5 min rest, off while subscribed).
+  The regression this replaced held the PPG continuously and imposed a ~7.8 mA
+  floor the watch could never drop below; with it gone, no sensor duration is
+  attributed to the app at all. See `docs/03-power.md`.
+- **UI:** SwiftUI on iPhone — settable step-goal ring, live HR chart, last
+  night's sleep, distance/floors/exercise/battery tiles, permission banners.
+  Compose for Wear OS on the watch — step goal on the bezel, HR, steps,
+  distance · exercise · floors, last night, link state, and a tappable warning
+  when Health Services drops the passive registration.
 
 ## Layout
 
 ```
-ios/     iPhone app (SwiftUI) — BridgeCentral (BLE link state machine), WatchEvent (wire
-         shapes + day boundaries), HealthKitSink (async HealthKit), HealthStore
-         (model + step mirror), ContentView/Components, Diagnostics,
+ios/     iPhone app (SwiftUI) — BridgeCentral (BLE link state machine), WatchEvent
+         (wire shapes + day boundaries), HealthKitSink (async HealthKit),
+         HealthMirror (queue, diff and retry against Apple Health), HealthStore
+         (model + published facts), ContentView/Components, Diagnostics,
          xcodegen project.yml
-wear/    Wear OS app (Kotlin) — BridgeService (GATT server, sensors, link
-         phases), DayLog (the day's aggregates and their rules), Settings
-         (step goal), Tray (notifications), Advertiser (radio duty cycle),
-         BridgeGatt (wire contract), DreamFitScreen, AncsClient,
-         PassiveDataService
+wear/    Wear OS app (Kotlin) — BridgeService (lifecycle + orchestration),
+         GattLink (GATT server, reassembly, flow-controlled notify), DeltaQueue
+         (movement spans held until the link confirms delivery), DayLog
+         (the day's aggregates and their rules), SleepLog (the night's rules),
+         WristWatcher (worn or not), Advertiser (radio duty cycle), Settings
+         (step goal), Tray (notifications), BridgeGatt (wire contract),
+         DreamFitScreen, AncsClient, PassiveDataService
 brand/   One heart-with-pulse mark (generate-icons.py) → all platform assets
 docs/    00 watch setup · 01 protocol · 02 baseline · 03 power · 04 parity
-         status · 05 troubleshooting · 06 lifecycles · PlantUML sources
-         (architecture, sequence, shared style)
+         status · 05 troubleshooting · 06 lifecycles · 07 what Health Services
+         actually delivers · PlantUML sources (architecture, sequence, shared
+         style)
 capture/ Redacted reference dumps from the original bring-up
 ```
 

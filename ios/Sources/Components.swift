@@ -34,7 +34,7 @@ enum Issue {
         case .bluetoothBlocked: "Dream Fit needs Bluetooth to reach your watch."
         case .bluetoothOff: "Turn Bluetooth on to reconnect your watch."
         case .healthDenied: "Steps and heart rate aren't being saved to Apple Health."
-        case .healthSetup: "Allow Dream Fit to write steps and heart rate."
+        case .healthSetup: "Allow Dream Fit to write steps, distance, floors, heart rate and sleep."
         case .healthUnavailable: "This device has no Health database, so nothing can be saved."
         }
     }
@@ -238,6 +238,14 @@ struct DevSection: View {
                 Text("link \(ble.state) · health \(health.auth.rawValue)")
                     .font(.caption2.monospaced()).foregroundStyle(.secondary)
 
+                Button("Compare our steps with Health") { health.auditSteps() }
+                    .buttonStyle(.bordered).buttonBorderShape(.capsule)
+                Button("Clear today from Health") { health.rewriteToday() }
+                    .buttonStyle(.bordered).buttonBorderShape(.capsule)
+                if let audit = health.stepAudit {
+                    Text(audit).font(.caption2.monospaced()).foregroundStyle(.secondary)
+                }
+
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(diag.rows.suffix(14)) { row in
                         Text(row.text)
@@ -249,5 +257,69 @@ struct DevSection: View {
                 }
             }
         }
+    }
+}
+
+// Last night, as the watch closed it. Asleep/awake only — Health Services does
+// not expose Fitbit's staging — so the card claims a duration and a window and
+// nothing about sleep quality.
+struct SleepCard: View {
+    let night: SleepRecord
+
+    private var minutes: Int { max(0, Int(night.end.timeIntervalSince(night.start) / 60)) }
+
+    private static let clock: DateFormatter = {
+        let f = DateFormatter()
+        f.timeStyle = .short
+        f.dateStyle = .none
+        return f
+    }()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "bed.double.fill").foregroundStyle(.purple)
+                Text("Sleep").font(.headline)
+                Spacer()
+                Text("\(Self.clock.string(from: night.start)) – \(Self.clock.string(from: night.end))")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text("\(minutes / 60)").font(.system(size: 34, weight: .semibold, design: .rounded))
+                Text("h").font(.callout).foregroundStyle(.secondary)
+                Text("\(minutes % 60)").font(.system(size: 34, weight: .semibold, design: .rounded))
+                Text("min").font(.callout).foregroundStyle(.secondary)
+            }
+        }
+        .padding(16)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 18))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Slept \(minutes / 60) hours \(minutes % 60) minutes")
+    }
+}
+
+// Named refusals. Each write is gated on its own type, so the app keeps
+// mirroring everything else, and the only thing missing is the reader's way of
+// knowing why one figure never arrives.
+struct UnsharedNote: View {
+    let names: [String]
+    let act: () -> Void
+
+    var body: some View {
+        Button(action: act) {
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Not shared with Health").font(.subheadline.weight(.semibold))
+                    Text(names.joined(separator: ", ")).font(.caption).foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
+            }
+            .padding(14)
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Not shared with Health: \(names.joined(separator: ", "))")
     }
 }

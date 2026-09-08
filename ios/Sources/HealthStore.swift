@@ -13,6 +13,7 @@ final class HealthStore: ObservableObject {
     @Published private(set) var confirmedAt: Date?
     @Published private(set) var beats: [Beat] = []
     @Published private(set) var auth: HealthAuth = .unknown
+    @Published private(set) var sleep: SleepRecord?
 
     // The goal is the user's, not ours. The watch draws its bezel from the same
     // number, so every change is pushed across the link.
@@ -27,11 +28,23 @@ final class HealthStore: ObservableObject {
     var onGoalChange: ((Int) -> Void)?
 
     private let sink = HealthKitSink()
+    private lazy var mirror = HealthMirror(
+        sink: sink, diag: diag,
+        mirroredSleep: decode(SleepRecord.self, HealthMirror.sleepMirroredKey),
+        // Both through `decode`: `persist` stores JSON, and UserDefaults'
+        // typed accessors return nil for it. Read with stringArray, the dedupe
+        // set came back empty on every launch and every resend was rewritten.
+        written: decode([String].self, HealthMirror.writtenKey) ?? [],
+        unwritten: decode([Data].self, HealthMirror.unwrittenKey) ?? [],
+        persist: { [weak self] value, key in self?.persist(value, key) },
+    )
     private let defaults = UserDefaults.standard
     private let diag = Diagnostics.shared
     private var unlockObserver: NSObjectProtocol?
 
     private enum Key {
+        static let audit = "stepAudit"
+        static let sleep = "sleepSnapshot"
         static let day = "daySnapshot"
         static let dayAt = "daySnapshotAt"
         static let beats = "beats"
@@ -51,6 +64,7 @@ final class HealthStore: ObservableObject {
 
     init() {
         day = decode(DayRecord.self, Key.day)
+        sleep = decode(SleepRecord.self, Key.sleep)
         confirmedAt = defaults.object(forKey: Key.dayAt) as? Date
         beats = decode([Beat].self, Key.beats) ?? []
         trimBeats()
@@ -84,10 +98,18 @@ final class HealthStore: ObservableObject {
     private var todayRecord: DayRecord? { day?.isToday == true ? day : nil }
 
     var todaySteps: Int? { todayRecord?.steps }
-    var exerciseMin: Int? { todayRecord?.exMin }
     var restingHR: Int? { todayRecord.map(\.rhr).flatMap { $0 > 0 ? $0 : nil } }
     var watchBattery: Int? { day.map(\.battery).flatMap { $0 >= 0 ? $0 : nil } }
     var bpmHistory: [Int] { beats.map(\.bpm) }
+    var todayDistanceM: Int? { todayRecord.map(\.distanceM).flatMap { $0 > 0 ? $0 : nil } }
+    var todayFloors: Int? { todayRecord.map(\.floors).flatMap { $0 > 0 ? $0 : nil } }
+
+    // The night the watch last closed, shown only while it is recent enough to
+    // be last night rather than a fragment of history the phone still holds.
+    var lastNight: SleepRecord? {
+        guard let sleep, Date().timeIntervalSince(sleep.end) < 36 * 3600 else { return nil }
+        return sleep
+    }
 
     var currentBPM: Int? {
         guard let last = beats.last, Date().timeIntervalSince(last.at) < Self.beatFreshness else { return nil }
@@ -98,17 +120,26 @@ final class HealthStore: ObservableObject {
 
     func apply(_ event: WatchEvent) {
         switch event {
-        case let .hr(bpm): applyBeat(bpm)
+        case let .hr(bpm, at): applyBeat(bpm, at)
         case let .day(record): applyDay(record)
+        case let .sleep(record): applySleep(record)
+        case let .delta(delta): mirror.accept(delta)
         }
     }
 
-    private func applyBeat(_ bpm: Int) {
-        let beat = Beat(bpm: bpm, at: Date())
-        beats.append(beat)
-        trimBeats()
-        persist(beats, Key.beats)
-        write(HealthKitSink.hr, "heart rate") { try await $0.saveBPM(bpm, type: HealthKitSink.hr, at: beat.at) }
+    // A beat with no time is the watch's live tile: shown, never filed. One
+    // with a time is a measurement, and the mirror is the only thing that files
+    // it — arriving hours late after a day apart is normal and must still land
+    // on the minute it was taken.
+    private func applyBeat(_ bpm: Int, _ at: Date?) {
+        let beat = Beat(bpm: bpm, at: at ?? Date())
+        if Date().timeIntervalSince(beat.at) < Self.beatWindow {
+            beats.append(beat)
+            beats.sort { $0.at < $1.at }
+            trimBeats()
+            persist(beats, Key.beats)
+        }
+        if at != nil { mirror.accept(beat) }
     }
 
     // Only a day message confirms the aggregates. An HR beat says nothing about
@@ -121,14 +152,16 @@ final class HealthStore: ObservableObject {
         defaults.set(now, forKey: Key.dayAt)
         // The heartbeat re-sends the same aggregates every 15 minutes, and
         // resting HR is one figure for the day: write it only when it moves.
-        if record.rhr > 0, mirroredRHR != DayValue(date: record.date, value: record.rhr) {
-            mirroredRHR = DayValue(date: record.date, value: record.rhr)
-            write(HealthKitSink.rhr, "resting heart rate") {
-                try await $0.saveBPM(record.rhr, type: HealthKitSink.rhr, at: now)
-            }
+        mirror.accept(record)
+        audit(record)
+    }
+
+    private func applySleep(_ record: SleepRecord) {
+        if record != sleep {
+            sleep = record
+            persist(record, Key.sleep)
         }
-        queued = record
-        flush()
+        mirror.accept(record)
     }
 
     private func trimBeats() {
@@ -147,57 +180,77 @@ final class HealthStore: ObservableObject {
         }
     }
 
-    // MARK: - Step mirror
-    //
-    // HealthKit mirrors the watch's absolute; it never accumulates. One
-    // reconcile in flight at a time, because HealthKit is append-only and two
-    // interleaved passes would each diff against the same stale sum.
-    //
-    // A day that cannot be mirrored now is queued, never dropped: retried on
-    // the next push, on unlock, on an authorisation change and on foreground.
-
-    private struct DayValue: Equatable {
-        let date: String
-        let value: Int
-    }
-
-    private var mirroredRHR: DayValue?
-    private var queued: DayRecord?
-    private var mirroring = false
-
+    // Retried on the next push, on unlock, on an authorisation change and on
+    // foreground — every event that can change the answer. See `HealthMirror`.
+    // Unlock and foreground are the two moments a locked-out audit can finally
+    // read: HealthKit is sealed while the phone is locked, so a walk with the
+    // phone in a pocket produces failures rather than figures, and the useful
+    // sample is the first one after it comes back.
     func flush() {
-        guard !mirroring, queued != nil else { return }
-        mirroring = true
+        mirror.flush()
+        day.map(audit)
+    }
+
+    // What this app wrote for today, what Health shows for it, and what every
+    // other source contributed. Sampled on each `day` push rather than only on
+    // demand, so a walk carrying both devices leaves a history to read back
+    // instead of a single figure taken after the fact. Every line also reaches
+    // the unified log through Diagnostics, which is what survives the app being
+    // killed.
+    @Published private(set) var stepAudit: String?
+
+    private static let auditLimit = 240
+
+    func auditSteps() { day.map(audit) ?? { stepAudit = "no day record yet" }() }
+
+    // Removes what this app wrote for today. A repair for a day already spoiled
+    // by an earlier build; what it clears does not come back.
+    func rewriteToday() {
+        guard let record = day else { stepAudit = "no day record yet"; return }
+        mirror.clearToday(record)
         Task {
-            while let record = queued, sink.canWrite(HealthKitSink.steps) {
-                do {
-                    try await reconcile(record)
-                } catch {
-                    diag.note("steps mirror deferred: \(error.localizedDescription)")
-                    break
-                }
-                // A push that landed mid-reconcile is newer than what we just
-                // wrote and has to go round again.
-                if queued == record { queued = nil }
-            }
-            mirroring = false
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            audit(record)
         }
     }
 
-    private func reconcile(_ record: DayRecord) async throws {
-        guard let range = record.range else { return }
-        let have = try await sink.mySum(HealthKitSink.steps, in: range)
-        guard record.steps != have else { return }
-        let stamp = min(Date(), range.end)
-        if record.steps > have {
-            try await sink.saveSteps(record.steps - have, at: stamp)
-        } else {
-            // Self-healing downward: the mirror drifted above the truth. Replace
-            // the day wholesale rather than leaving it permanently inflated.
-            try await sink.deleteMine(HealthKitSink.steps, in: range)
-            if record.steps > 0 { try await sink.saveSteps(record.steps, at: stamp) }
+    private func audit(_ record: DayRecord) {
+        guard let range = record.range, sink.available else { return }
+        Task { [sink, diag] in
+            do {
+                // Every mirrored type, because the merge does not treat them
+                // alike: a dense type absorbs our samples and a sparse one adds
+                // them, which is only visible when they are read side by side.
+                var parts: [String] = []
+                for (type, name) in [(HealthKitSink.steps, "steps"),
+                                     (HealthKitSink.distance, "dist"),
+                                     (HealthKitSink.floors, "floors")] {
+                    let mine = try await sink.mySum(type, in: range)
+                    let split = try await sink.sourceBreakdown(type, in: range)
+                    let sources = split.bySource.map { "\($0.0)=\($0.1)" }.joined(separator: " ")
+                    parts.append("\(name) ours=\(mine) health=\(split.merged) [\(sources)]")
+                }
+                // The watch's own ledger of what it delivered, which is what
+                // separates a delivery that never arrived from a write Health
+                // refused: ours < delivered is the phone's fault, delivered <
+                // watch is the belt's.
+                let ledger = ["steps", "dist", "floors"]
+                    .compactMap { k in record.covered?[k].map { "\(k)=\($0.units)" } }
+                    .joined(separator: " ")
+                let line = "audit d=\(record.date) watch=\(record.steps)/\(record.distanceM)m/"
+                    + "\(record.floors)fl · delivered [\(ledger)] · " + parts.joined(separator: " · ")
+                stepAudit = line
+                diag.note(line)
+                var kept = defaults.stringArray(forKey: Key.audit) ?? []
+                kept.append("\(ISO8601DateFormatter().string(from: Date())) \(line)")
+                if kept.count > Self.auditLimit { kept.removeFirst(kept.count - Self.auditLimit) }
+                defaults.set(kept, forKey: Key.audit)
+            } catch {
+                diag.note("audit failed: \(error.localizedDescription)")
+            }
         }
     }
+
 
     // MARK: - Authorisation
     //
@@ -229,6 +282,17 @@ final class HealthStore: ObservableObject {
     }
 
     var healthDenied: Bool { auth == .denied }
+
+    // Types Health has been asked about and refused. The banner covers the core
+    // pair, because a heart-rate refusal must not read as steps being broken,
+    // but a refused type still has to be named: a tile showing "—" means the
+    // watch has not said yet, and that is a different answer from never.
+    var unsharedMirrors: [String] {
+        guard sink.available else { return [] }
+        return HealthKitSink.mirrored
+            .filter { sink.status($0.0) == .sharingDenied }
+            .map(\.1)
+    }
 
     func resolveHealthPermission() {
         if !healthDenied { requestAuth() }

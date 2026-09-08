@@ -4,7 +4,7 @@ package com.drmhse.dream.fit
 //
 // watch -> phone
 //   {"t":"hr","bpm":72}
-//   {"t":"day","d":"2026-09-05","steps":8412,"rhr":54,"exmin":22,"bat":73}
+//   {"t":"day","d":"2026-09-05","steps":8412,"rhr":54,"dist":6240,"floors":7,"bat":73}
 //
 // phone -> watch
 //   {"t":"notify","title":"...","body":"..."}

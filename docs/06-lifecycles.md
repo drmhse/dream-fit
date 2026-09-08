@@ -41,18 +41,22 @@ Liveness is counted in `day` messages, not in bytes — heart rate arrives every
 Dropping is the point: reconnecting forces a fresh discovery and a fresh CCCD
 write, which is the part the watch is waiting for.
 
-## iPhone — the Health mirror (`HealthStore`)
+## iPhone — the Health mirror (`HealthMirror`)
 
 | State | Means |
 |---|---|
 | idle | nothing outstanding |
 | queued | a `day` is waiting for a condition that is not met yet |
 | reconciling | a read-diff-write pass is in flight |
+| settling | a delta arrived inside the last three minutes, so the absolute and the samples disagree by construction and neither is corrected |
 
 A day that cannot be mirrored is queued, never dropped, and retried on the next
 push, on device unlock, on an authorisation change, and on foreground. One pass
 at a time, because HealthKit is append-only and two interleaved passes would
-each diff against the same stale sum.
+each diff against the same stale sum. Sleep is queued by the same rule and for
+the same reason: what the watch said and what Apple Health holds are tracked
+separately, or a night dropped while the phone was locked would look like a
+record we already had and never be retried.
 
 ## Watch — the link (`BridgeService` + `Advertiser`)
 
@@ -77,9 +81,39 @@ Not a phase machine but a set of rules with one owner:
 
 - rollover resets the day at the watch's own local midnight
 - the Health Services aggregate is the authority and may only raise the total
-- the hardware counter projects forward between aggregates, re-anchoring on
-  every one, so a projected step is never counted twice
+- heart-rate samples carry their own time, so a batch of history and a live
+  reading can interleave; the resting-rate window is anchored to the newest
+  time seen, and needs twelve samples inside it before it will name a resting
+  rate at all
 - writes to storage are throttled, and forced before every push and on destroy
+
+## Watch — the delta queue (`DeltaQueue`)
+
+Two states and one rule, because a movement delta is the only message here that
+no later absolute can reconstruct.
+
+| State | Means |
+|---|---|
+| pending | on storage, waiting for a link with a subscriber |
+| in flight | handed to the radio, not yet reported as sent |
+
+In flight becomes forgotten when the radio reports its queue emptied cleanly,
+and pending again on a discard, on the last subscriber leaving, or on a restart
+that found a batch outstanding. Handing a message to the link is not delivering
+it: the link discards its backlog on a disconnect, on a failed notify and on
+overflow.
+
+## Watch — the night (`SleepLog`)
+
+Also rules rather than phases, and every one of them exists to avoid inventing
+a night that did not happen:
+
+- a session may only open on a worn watch, and its start is clamped to the
+  moment the wrist began — a state delivered on registration can predate that
+- taking the watch off closes the session at the moment of removal
+- under 15 minutes is stillness; over 16 hours is a wake transition never seen
+- only a closed session is sent, and the last one is re-sent on every subscribe
+  and sync so a reconnect recovers it
 
 ## Redrawing the diagrams
 

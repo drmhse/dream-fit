@@ -12,6 +12,10 @@ struct ContentView: View {
 
     private var stepGoal: Int { health.stepGoal }
 
+    private static func km(_ metres: Int) -> String {
+        String(format: "%.2f", Double(metres) / 1000)
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -20,11 +24,21 @@ struct ContentView: View {
                     if let issue { ActionBanner(issue: issue, act: resolve) }
                     todayCard
                     heartCard
+                    if let night = health.lastNight { SleepCard(night: night) }
                     HStack(spacing: 16) {
-                        Tile("Exercise", health.exerciseMin.map(String.init), unit: "min",
-                             icon: "flame.fill", tint: .orange)
+                        Tile("Distance", health.todayDistanceM.map(Self.km), unit: "km",
+                             icon: "figure.walk", tint: .teal)
+                        Tile("Floors", health.todayFloors.map(String.init), unit: "climbed",
+                             icon: "stairs", tint: .brown)
+                    }
+                    HStack(spacing: 16) {
+                        Tile("Resting", health.restingHR.map(String.init), unit: "bpm",
+                             icon: "heart.text.square", tint: .pink)
                         Tile("Watch", health.watchBattery.map(String.init), unit: "%",
                              icon: "watch.analog", tint: .indigo)
+                    }
+                    if !health.unsharedMirrors.isEmpty {
+                        UnsharedNote(names: health.unsharedMirrors) { showHealthHelp = true }
                     }
                     if showDev { DevSection(ble: ble, health: health) }
                 }

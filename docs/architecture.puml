@@ -7,19 +7,25 @@ skinparam nodesep 22
 skinparam ranksep 34
 
 package "Pixel Watch 4 · Wear OS" as W {
-  component "Health Services\nSTEPS_DAILY" as HS <<ext>>
-  component "Sensors\nheart rate · step counter" as SENS <<ext>>
-  component "DayLog\nsteps · resting HR · exercise\nthe day's only truth" as DAYLOG <<watch>>
-  component "BridgeService\nGATT server · link phases" as SVC <<watch>>
+  component "Health Services · passive\nsteps · distance · floors\nheart rate · activity state" as HS <<ext>>
+  component "Health Services · MeasureClient\nlive heart rate, while watched" as SENS <<ext>>
+  component "off-body sensor\nworn or not" as OFFBODY <<ext>>
+  component "DayLog\nsteps · distance · floors\nresting HR · exercise" as DAYLOG <<watch>>
+  component "SleepLog\nthe night, gated on the wrist" as SLEEPLOG <<watch>>
+  component "BridgeService\nlifecycle · orchestration" as SVC <<watch>>
+  component "GattLink\nGATT server · flow control" as LINK <<watch>>
   component "Advertiser\n30s burst, 5min rest" as ADV <<watch>>
   component "AncsClient + Tray\nnotifications · call actions" as TRAY <<watch>>
   component "DreamFitScreen" as WUI <<watch>>
 
-  HS -[#1DA34A]-> DAYLOG : absolute total
-  SENS -[#1DA34A]-> DAYLOG : projection
-  SENS -[#B23A34]-> SVC : heart rate
+  HS -[#1DA34A]-> DAYLOG : absolute totals, ambient hr
+  HS -[#1DA34A]-> SLEEPLOG : asleep / awake
+  OFFBODY -[#BF5AF2]-> SLEEPLOG : gates every session
+  SENS -[#B23A34]-> SVC : live heart rate
   DAYLOG -[#1DA34A]-> SVC : day record
+  SLEEPLOG -[#BF5AF2]-> SVC : closed night
   DAYLOG -[#8E8E93]-> WUI
+  SVC -[#8E8E93]-> LINK : send
   SVC -[#8E8E93]-> ADV : off while subscribed
   ' Tray has no inbound edge of its own, so without this dot ranks it at the
   ' top of the cluster and the ANCS arrow crosses the whole diagram.
@@ -28,16 +34,18 @@ package "Pixel Watch 4 · Wear OS" as W {
 
 package "iPhone · iOS" as P {
   component "BridgeCentral\nLinkPhase state machine" as BC <<phone>>
-  component "HealthStore + HealthKitSink\nstep mirror · queue + retry" as STORE <<phone>>
-  component "ContentView\nring · chart · goal" as UI <<phone>>
+  component "HealthMirror + HealthKitSink\ndiff · queue · retry" as STORE <<phone>>
+  component "HealthStore\npublished facts" as MODEL <<phone>>
+  component "ContentView\nring · chart · sleep · tiles" as UI <<phone>>
   component "Apple Health" as HK <<ext>>
   component "iOS ANCS" as IOSANCS <<ext>>
 
-  BC -[#0A6ED1]-> STORE : hr · day
+  BC -[#0A6ED1]-> MODEL : hr · day · sleep
+  MODEL -[#0A6ED1]-> STORE : queue
   STORE -[#0A6ED1]-> HK : read own samples,\nwrite the difference
-  STORE <-[#8E8E93]-> UI : facts / step goal
+  MODEL <-[#8E8E93]-> UI : facts / step goal
 }
 
-SVC <-[#0A6ED1,thickness=3]-> BC : **encrypted GATT**\nhr, day / sync, goal
+LINK <-[#0A6ED1,thickness=3]-> BC : **encrypted GATT**\nhr, day, sleep / sync, goal
 IOSANCS -[#8E8E93,dashed]-> TRAY : ANCS
 @enduml

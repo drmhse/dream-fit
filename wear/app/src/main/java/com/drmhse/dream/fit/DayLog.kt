@@ -2,21 +2,20 @@ package com.drmhse.dream.fit
 
 import android.content.Context
 import java.time.LocalDate
+import java.time.ZoneId
 
-// The watch is the sole authority for daily aggregates. One prefs key, reset on
+// The watch is the sole authority for daily aggregates, and Health Services is
+// the sole authority for the readings behind them. One prefs key, reset on
 // rollover: steps only ever rise within a day (Health Services replays stale
 // snapshots out of order), RHR is the day's lowest ten-minute minimum.
 class DayLog(context: Context) {
     companion object {
         private const val KEY = "day"
-        private const val EX_BPM = 110
         private const val RHR_WINDOW_MS = 600_000L
         private const val RHR_MIN_SAMPLES = 12
         // A projected step is worth a prefs write every so often, not every step.
         private const val WRITE_THROTTLE_MS = 10_000L
-        // Keys from versions before the single `day` record. Left behind by an
-        // update they would sit in prefs forever, so sweep them once.
-        private val LEGACY = listOf("abs_v1", "swept_v1", "last_counter", "ui_hr")
+        private val KINDS = listOf("steps", "dist", "floors")
     }
 
     private val prefs = context.getSharedPreferences("dreamfit", Context.MODE_PRIVATE)
@@ -27,39 +26,46 @@ class DayLog(context: Context) {
         private set
     var rhr = 0
         private set
-    var exMin = 0
+    var distM = 0
+        private set
+    var floors = 0
         private set
 
-    // Health Services batches its aggregates to save power, so the hardware
-    // counter fills the gap: a projection from the last one, never an authority.
-    private var anchor: Float? = null
-    private var base = 0
-    private var counter: Float? = null
+    // What the delta lane has already delivered, and how far it reaches. The
+    // phone tops up only the span past the watermark, so the same steps cannot
+    // arrive twice by two routes.
+    private val coveredUnits = mutableMapOf<String, Double>()
+    private val coveredThrough = mutableMapOf<String, Long>()
 
     private var lastWrite = 0L
+    private var lastBpmAt = 0L
     private val hrWindow = ArrayDeque<Pair<Long, Int>>()
-    private var lastExMark = 0L
 
     init {
-        prefs.getString(KEY, "")?.split("|")?.takeIf { it.size == 4 }?.let {
-            date = it[0]
-            steps = it[1].toIntOrNull() ?: 0
-            rhr = it[2].toIntOrNull() ?: 0
-            exMin = it[3].toIntOrNull() ?: 0
+        prefs.getString(KEY, "")?.split("|")?.takeIf { it.size >= 5 }?.let { f ->
+            date = f[0]
+            steps = f[1].toIntOrNull() ?: 0
+            rhr = f[2].toIntOrNull() ?: 0
+            distM = f[3].toIntOrNull() ?: 0
+            floors = f[4].toIntOrNull() ?: 0
+            if (f.size >= 5 + KINDS.size * 2) KINDS.forEachIndexed { n, k ->
+                coveredUnits[k] = f[5 + n * 2].toDoubleOrNull() ?: 0.0
+                coveredThrough[k] = f[6 + n * 2].toLongOrNull() ?: 0L
+            }
         }
-        sweepLegacy()
         roll()
         publish()
     }
 
-    private fun sweepLegacy() {
-        val stale = prefs.all.keys.filter { it in LEGACY || it.startsWith("passive_") }
-        if (stale.isEmpty()) return
-        prefs.edit().apply { stale.forEach { remove(it) } }.apply()
-    }
 
-    fun json(battery: Int) =
-        """{"t":"day","d":"$date","steps":$steps,"rhr":$rhr,"exmin":$exMin,"bat":$battery}"""
+    // `inc` is the service's incarnation: a change tells the phone this process
+    // restarted and whatever it held in memory about the link is stale.
+    fun json(battery: Int, incarnation: String) =
+        """{"t":"day","d":"$date","steps":$steps,"rhr":$rhr,""" +
+            """"dist":$distM,"floors":$floors,"bat":$battery,"inc":"$incarnation",""" +
+            """"cov":{""" + KINDS.joinToString(",") {
+                """"$it":[${Math.round(coveredUnits[it] ?: 0.0)},${coveredThrough[it] ?: 0L}]"""
+            } + "}}"
 
     // MARK: - Mutations. Each returns whether the phone should hear about it.
 
@@ -69,56 +75,70 @@ class DayLog(context: Context) {
         date = today
         steps = 0
         rhr = 0
-        exMin = 0
-        base = 0
-        anchor = counter
+        distM = 0
+        floors = 0
         hrWindow.clear()
+        lastBpmAt = 0
+        coveredUnits.clear()
+        coveredThrough.clear()
         save(force = true)
         return true
     }
 
-    // Re-anchor either way: the projection continues from the reported total, so
-    // steps the aggregate already counted are never added a second time.
-    fun applyDailyTotal(total: Int): Boolean {
-        if (total < 0) return false
+    // Every daily aggregate follows the same rule: absolute, and it may only
+    // rise within a day, because Health Services replays stale snapshots.
+    //
+    // `forDate` is the day the aggregate actually covers, not the day it
+    // arrived. A snapshot of yesterday delivered after midnight is a complete
+    // day's total, and adopting it as today's would both inflate today and,
+    // because the totals may only rise, freeze the real count until tomorrow.
+    fun applyDailyTotals(forDate: String, steps: Int, distM: Int, floors: Int): Boolean {
         roll()
-        if (total > steps) steps = total
-        base = steps
-        anchor = counter
-        save(force = true)
-        return true
+        if (forDate.isNotEmpty() && forDate != date) return false
+        var changed = false
+        if (steps > this.steps) { this.steps = steps; changed = true }
+        if (distM > this.distM) { this.distM = distM; changed = true }
+        if (floors > this.floors) { this.floors = floors; changed = true }
+        if (changed) save(force = true)
+        return changed
     }
 
-    fun applyCounter(value: Float): Boolean {
-        counter = value
+    // The belt's receipt. Until a delivered delta is written off here, the
+    // absolute still claims that load and the phone writes it a second time.
+    fun applyCovered(carried: List<DeltaQueue.Carried>): Boolean {
+        if (carried.isEmpty()) return false
         roll()
-        val from = anchor
-        // First reading, or the counter reset on reboot: anchor, never project.
-        if (from == null || value < from) {
-            anchor = value
-            base = steps
-            return false
+        val dayStart = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        var changed = false
+        for (c in carried) {
+            if (c.kind !in KINDS || c.end < dayStart) continue
+            coveredUnits[c.kind] = (coveredUnits[c.kind] ?: 0.0) + c.value
+            coveredThrough[c.kind] = maxOf(coveredThrough[c.kind] ?: 0L, c.end)
+            changed = true
         }
-        val projected = base + (value - from).toInt()
-        if (projected <= steps) return false
-        steps = projected
-        save()
-        return true
+        if (changed) save(force = true)
+        return changed
     }
 
-    fun applyBpm(now: Long, bpm: Int): Boolean {
+    // Exercise minutes are the platform's own detection, not a heart-rate
+    // threshold of ours: USER_ACTIVITY_EXERCISE opens the span, anything else
+    // closes it.
+
+    // Batched history and live samples interleave, so the window is anchored to
+    // the newest time seen rather than to arrival order. Dropping everything
+    // not strictly newest would throw away a whole batch of history the moment
+    // one live sample landed.
+    fun applyBpm(at: Long, bpm: Int): Boolean {
+        val newest = maxOf(lastBpmAt, at)
+        if (at <= newest - RHR_WINDOW_MS) return false
+        lastBpmAt = newest
         roll()
         var changed = false
-        hrWindow.addLast(now to bpm)
-        while (hrWindow.isNotEmpty() && now - hrWindow.first().first > RHR_WINDOW_MS) hrWindow.removeFirst()
+        hrWindow.addLast(at to bpm)
+        while (hrWindow.isNotEmpty() && newest - hrWindow.first().first > RHR_WINDOW_MS) hrWindow.removeFirst()
         if (hrWindow.size >= RHR_MIN_SAMPLES) {
             val low = hrWindow.minOf { it.second }
             if (rhr == 0 || low < rhr) { rhr = low; changed = true }
-        }
-        if (bpm >= EX_BPM && now - lastExMark > 60_000) {
-            lastExMark = now
-            exMin++
-            changed = true
         }
         if (changed) save(force = true)
         return changed
@@ -133,8 +153,11 @@ class DayLog(context: Context) {
         val now = System.currentTimeMillis()
         if (!force && now - lastWrite < WRITE_THROTTLE_MS) return
         lastWrite = now
-        prefs.edit().putString(KEY, "$date|$steps|$rhr|$exMin").apply()
+        val cov = KINDS.joinToString("|") { "${coveredUnits[it] ?: 0.0}|${coveredThrough[it] ?: 0L}" }
+        prefs.edit().putString(KEY, "$date|$steps|$rhr|$distM|$floors|$cov").apply()
     }
 
-    private fun publish() = WatchState.update { it.copy(steps = steps, exMin = exMin) }
+    private fun publish() = WatchState.update {
+        it.copy(steps = steps, distanceM = distM, floors = floors)
+    }
 }

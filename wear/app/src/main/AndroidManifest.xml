@@ -1,15 +1,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-  <uses-permission android:name="android.permission.BLUETOOTH"/>
-  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
   <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
   <uses-permission android:name="android.permission.BODY_SENSORS"/>
+  <!-- The documented gate for reading sensors once the app is hidden. Not
+       grantable on Wear OS 7, where BODY_SENSORS is folded into the HEALTH
+       group and no background option is offered — passive delivery continued
+       without it — so nothing is concluded from whether it is held; only
+       onPermissionLost counts. Kept for the Wear OS 4 and 5 range, where it is
+       both enforced and grantable. Uncapped on purpose: the documented
+       maxSdkVersion="35" migration assumes targetSdk 36+, and capping by
+       device SDK would remove it from the very devices that enforce it. -->
+  <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND"/>
   <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
   <uses-permission android:name="android.permission.health.READ_STEPS"/>
   <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-feature android:name="android.hardware.type.watch"/>
   <application
     android:label="@string/app_name"
@@ -21,6 +29,9 @@
     </activity>
     <service android:name=".BridgeService" android:exported="false"
       android:foregroundServiceType="connectedDevice"/>
+    <receiver android:name=".BootReceiver" android:exported="true" android:enabled="true">
+      <intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter>
+    </receiver>
     <service android:name=".PassiveDataService" android:exported="true"
       android:permission="com.google.android.wearable.healthservices.permission.PASSIVE_DATA_BINDING">
       <intent-filter>

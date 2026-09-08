@@ -19,6 +19,9 @@ class AncsClient(
     companion object {
         private const val TAG = "DreamFit-Ancs"
         private const val ATTR_MAX = 4_096
+        // AppIdentifier, Title, Subtitle, Message — exactly what fetchAttributes
+        // asks for, and the only way to know where one response ends.
+        private const val ATTR_COUNT = 4
         private val SERVICE: UUID = UUID.fromString("7905F431-B5CE-4E99-A40F-4B1E122D00D0")
         private val NOTIF_SOURCE: UUID = UUID.fromString("9FBF120D-6301-42D9-8C58-25E699A21DBD")
         private val CONTROL: UUID = UUID.fromString("69D1D8F3-45E1-49A8-9821-9BBDFDAAD9D9")
@@ -163,12 +166,21 @@ class AncsClient(
 
     // Null while the response is still incomplete.
     // CommandID(1)=0, UID(4), then repeating AttrID(1) Len(2 LE) Value.
+    //
+    // Stops after the four attributes that were requested rather than when the
+    // buffer runs out. iOS replays its whole tray on subscribe, so responses
+    // arrive back to back: reading to the end of the buffer consumed the next
+    // response's header as an attribute of this one, desynchronised the stream
+    // and left every following notification unparseable — the `bad cmd 3` /
+    // `bad cmd 102` warnings in logcat after a reconnect. Trailing bytes now
+    // stay in the buffer for the response they belong to.
     private fun parse(v: ByteArray): Attrs? {
         if (v.size < 5) return null
-        if (v[0] != 0.toByte()) { Log.w(TAG, "bad cmd ${v[0]}"); return Attrs(v.size) }
+        if (v[0] != 0.toByte()) { Log.w(TAG, "bad cmd ${v[0]}, resyncing"); return Attrs(v.size) }
         var i = 5
         var app = ""; var title = ""; var sub = ""; var msg = ""
-        while (i + 3 <= v.size) {
+        repeat(ATTR_COUNT) {
+            if (i + 3 > v.size) return null
             val id = v[i].toInt() and 0xFF
             val len = ByteBuffer.wrap(v, i + 1, 2).order(ByteOrder.LITTLE_ENDIAN).short.toInt() and 0xFFFF
             if (i + 3 + len > v.size) return null
@@ -176,7 +188,6 @@ class AncsClient(
             when (id) { 0 -> app = str; 1 -> title = str; 2 -> sub = str; 3 -> msg = str }
             i += 3 + len
         }
-        if (i < v.size) return null
         return Attrs(i, v.sliceArray(1..4).toHex(), app, title, sub, msg)
     }
 

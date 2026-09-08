@@ -1,5 +1,9 @@
 package com.drmhse.dream.fit
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.LocalContext
 import androidx.wear.compose.material3.AppScaffold
 import androidx.wear.compose.material3.CircularProgressIndicator
 import androidx.wear.compose.material3.MaterialTheme
@@ -35,6 +41,7 @@ private val Pulse = Color(0xFFFF453A)
 private val Steps = Color(0xFF30D158)
 private val Ember = Color(0xFFFF9F0A)
 private val Muted = Color(0xFF8E8E93)
+private val Sleep = Color(0xFFBF5AF2)
 
 @Composable
 fun DreamFitScreen() {
@@ -88,9 +95,51 @@ private fun Readout(s: WatchState.Snapshot) {
         )
         Text("steps", color = Muted, fontSize = 10.sp)
 
-        if (s.exMin > 0) {
+        val extras = buildList {
+            if (s.distanceM > 0) add("%.1f km".format(s.distanceM / 1000f) to Steps)
+            if (s.floors > 0) add("${s.floors} fl" to Muted)
+        }
+        if (extras.isNotEmpty()) {
             Spacer(Modifier.height(4.dp))
-            Text("${s.exMin} min active", color = Ember, fontSize = 10.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                extras.forEachIndexed { i, (label, tint) ->
+                    if (i > 0) Text(" · ", color = Muted, fontSize = 10.sp)
+                    Text(label, color = tint, fontSize = 10.sp)
+                }
+            }
+        }
+
+        if (s.sleepMin > 0) {
+            Spacer(Modifier.height(2.dp))
+            Text(
+                "slept ${s.sleepMin / 60}h ${s.sleepMin % 60}m",
+                color = Sleep,
+                fontSize = 10.sp,
+            )
+        }
+
+        if (s.ambientBlocked) {
+            // Health Services has dropped the passive registration. Tapping
+            // opens app settings, which is the only place a health permission
+            // can be restored.
+            val ctx = LocalContext.current
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "sensor access lost",
+                color = Pulse,
+                fontSize = 9.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.clickable {
+                    runCatching {
+                        ctx.startActivity(
+                            Intent(
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:${ctx.packageName}"),
+                            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                        )
+                    }
+                },
+            )
         }
 
         Spacer(Modifier.height(10.dp))
