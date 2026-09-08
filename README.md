@@ -10,6 +10,31 @@ central, and daily health data flows as absolute, idempotent messages.
 
 ![Architecture](docs/architecture.svg)
 
+## The rule the design rests on
+
+A measurement is published once, and it is written once. Every hop between
+those two points either confirms or holds.
+
+![One measurement, from published once to written once](docs/custody.svg)
+
+Each boundary has one thing to get right, and only one:
+
+| Boundary | Why it can fail | What holds |
+|---|---|---|
+| Health Services → disk | each point is published once and cannot be re-asked | append before anything else happens |
+| disk → radio | the link discards its backlog past 512 chunks | one window of 64, forgotten only on a clean flush |
+| radio → phone | confirmation can be lost after the data landed | at-least-once, deduplicated on kind + exact span |
+| phone → HealthKit | the store is sealed while the phone is locked | kept and retried, because the watch has forgotten it |
+
+The idempotency key is the kind plus the exact span, which is unique by
+construction rather than by agreement. Nothing allocates it, nothing negotiates
+it, and no acknowledgement travels back.
+
+The daily absolute is deliberately outside that chain. It drives the watch
+bezel, the phone's tiles and the audit line, and it never writes to Apple
+Health. It used to, alongside the deltas, and two writers for one figure is
+what made the same steps land twice.
+
 ## How it works
 
 - **Transport:** Nordic-UART-shaped GATT service `6E400001-…` — RX (`…0002`,

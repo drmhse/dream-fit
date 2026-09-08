@@ -70,6 +70,28 @@ Any inbound write doubles as a sync request: the watch answers every
 message with a fresh `day` push, so the phone re-asks with a bare
 `{"t":"sync"}` after reconnects and restores.
 
+## The rule the rest of this follows
+
+A measurement is published once, and it is written once. Every hop between
+those two points either confirms or holds, and each boundary has exactly one
+thing to get right:
+
+![One measurement, from published once to written once](custody.svg)
+
+| Boundary | Why it can fail | What holds |
+|---|---|---|
+| Health Services → disk | each point is published once and cannot be re-asked | append before anything else happens |
+| disk → radio | the link discards its backlog past 512 chunks | one window of 64, forgotten only on a clean flush |
+| radio → phone | confirmation can be lost after the data landed | at-least-once, deduplicated on kind + exact span |
+| phone → HealthKit | the store is sealed while the phone is locked | kept and retried, because the watch has forgotten it |
+
+The key is unique by construction rather than by agreement. Nothing allocates
+it, nothing negotiates it, and no acknowledgement travels back, so two devices
+that have never compared notes still agree on what they are looking at.
+
+The daily absolute sits outside that chain on purpose. Everything below is how
+each boundary is held.
+
 ## The deltas are the measurement
 
 `day` says how much the watch has counted; it does not say when any of it

@@ -1,0 +1,41 @@
+@startuml custody
+!include style.puml
+hide stereotype
+title One measurement, from published once to written once
+
+skinparam nodesep 18
+skinparam ranksep 30
+
+component "Health Services\npublishes each point once,\nkeeps no history" as HS <<ext>>
+component "deltas.log\nappend before anything else" as LOG <<watch>>
+component "one window\n64 messages in flight" as WIN <<watch>>
+component "unwritten\nkept until Health accepts" as UNW <<phone>>
+component "Apple Health" as HK <<ext>>
+
+HS -[#1DA34A]-> LOG : **cannot be re-asked**\nso this write comes first
+LOG -[#1DA34A]-> WIN : **confirmed, or returned**\nthe radio says which
+WIN -[#0A6ED1]-> UNW : **at-least-once**\nkind + exact span is the key
+UNW -[#0A6ED1]-> HK : **written once**\nover the span it happened in
+
+note bottom of LOG
+  Survives the process, the reboot
+  and a day with nobody listening.
+end note
+
+note bottom of WIN
+  A window is forgotten only on a clean
+  flush. A discard puts it back in front.
+end note
+
+note bottom of UNW
+  The watch has already forgotten it,
+  so a sealed store must not drop it.
+end note
+
+note right of HK
+  The daily absolute never arrives here.
+  It drives the screens and the audit,
+  and having it write too is what put
+  the same steps in twice.
+end note
+@enduml
