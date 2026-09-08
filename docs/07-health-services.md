@@ -30,11 +30,42 @@ Health Connect, which Wear OS does not expose to apps (`03-power.md`).
 | `CALORIES_DAILY` | `…<Double, …>` | `Double` kcal | "The total number of calories over a day (**including both BMR and active calories**)" — supported, deliberately not collected |
 | `FLOORS_DAILY` | `…<Double, …>` | `Double` | "The total number floors climbed over a day" |
 | `HEART_RATE_BPM` | `DeltaDataType<Double, SampleDataPoint<Double>>` | `Double` bpm | "Current heart rate, in beats per minute" |
+| `STEPS` | `DeltaDataType<Long, IntervalDataPoint<Long>>` | `Long` | "The number of steps taken since the last update" |
+| `DISTANCE` | `…<Double, IntervalDataPoint<Double>>` | `Double` metres | same since-last-update rule |
+| `FLOORS` | `…<Double, IntervalDataPoint<Double>>` | `Double` | same since-last-update rule |
 
 Every `*_DAILY` point "will cover the interval from the start of day to now" —
 **cumulative, not a delta**, which is why `DayLog` treats them as absolutes
 that may only rise, and why summing them multiplies the truth by the point
 count.
+
+### How often the interval types actually fire
+
+"Since the last update" says nothing about the rate, and the rate is what
+decides the design. Measured on this watch, 2026-09-08:
+
+| | rate | one batch |
+|---|---|---|
+| `STEPS` | **one point per step** | 47 points of value 1.0 over 47 seconds, ~400 ms apart |
+| `HEART_RATE_BPM` | ~30 readings a minute | 359 readings over 11.5 minutes |
+
+Both numbers were surprises, and both were expensive to learn late.
+
+One point per step means the interval types are not a placement hint for a
+count the daily aggregate owns — they *are* the count, arriving one at a time.
+It also means a queue sized at 1,000 entries holds about fifteen minutes of
+walking rather than the day it was documented as, and that mirroring each one
+straight through writes one Apple Health row per step. Contiguous points are
+therefore merged, up to five minutes, before they are queued.
+
+Thirty heart-rate readings a minute is roughly 29,000 a day. Full resolution
+still feeds the resting-rate quorum in `DayLog`, but only one reading a minute
+is filed: the median of that minute, carried at the time that reading was
+actually taken.
+
+An idle span still produces a point. One measured delta read 1.0 steps across
+nineteen minutes, which is why the merge has a ceiling — folding that into the
+walk that followed would smear a one-minute walk across twenty.
 
 Three consequences that are not obvious:
 

@@ -2,10 +2,11 @@
 !include style.puml
 title A day's steps reaching Apple Health
 
+participant "Health Services" as HS #F2F2F7
+participant "DeltaQueue\non the watch" as DQ #EAF8EF
 participant "BridgeService\non the watch" as SVC #EAF8EF
 participant "BridgeCentral" as BC #EAF2FC
-participant "HealthStore" as STORE #EAF2FC
-participant "HealthKitSink" as SINK #EAF2FC
+participant "HealthMirror" as STORE #EAF2FC
 participant "Apple Health" as HK #F2F2F7
 
 == Bringing the link up ==
@@ -21,48 +22,62 @@ note over SVC, BC
   refuses the read, the write and the subscribe.
 end note
 
-== Steady state ==
+== What the watch collects ==
 
-SVC -[#1DA34A]> BC : day: absolute total for the watch's own date
-SVC -[#B23A34]> BC : hr: one reading every 5s
-
-== Mirroring one day ==
-
-BC -> STORE : day record, N steps
-STORE -> SINK : sum the samples we wrote for that date
-SINK -> HK : statistics query, our source only
-HK --> SINK : M steps
-note right of SINK
-  An empty date comes back as errorNoData.
-  That is a sum of zero, not a failure. Reading
-  it as a failure meant the first sample of a
-  new day was never written, so the date stayed
-  empty and the query kept failing.
+HS -[#1DA34A]> DQ : one STEPS point per step, ~400ms apart
+DQ -> DQ : merge contiguous points, up to 5 minutes
+HS -[#B23A34]> DQ : ~30 ambient readings a minute
+DQ -> DQ : one median reading per minute, at its own time
+note right of DQ
+  Appended to a log on disk as they arrive.
+  Health Services publishes each point once and
+  keeps no history, so this is the only copy.
 end note
 
-alt N > M
-  STORE -[#1DA34A]> SINK : write N minus M
-  SINK -[#1DA34A]> HK : one step sample
-else N < M
-  STORE -> SINK : delete our samples, write N
-  SINK -> HK : the day, replaced
-else store sealed or not authorised
-  SINK --> STORE : errorDatabaseInaccessible
-  STORE -> STORE : keep the day queued
+== Delivering, a window at a time ==
+
+loop until the queue is empty
+  DQ -[#1DA34A]> BC : 64 messages
+  BC --> SVC : the radio reports its queue emptied
+  SVC -> DQ : forget that window
+  SVC -> SVC : write it off against the day's ledger
+end
+note over DQ, BC
+  64 at a time because the link discards its whole
+  backlog past 512 chunks: one burst of a day's queue
+  overflowed, returned the batch, and burst again.
+  Measured: 800 messages in 12 seconds, none returned.
+end note
+
+alt the radio reports a discard
+  SVC -> DQ : return the window to the front
+  SVC -> SVC : retry in 2s
+end
+
+== Writing one delivery ==
+
+BC -> STORE : delta, or a timestamped beat
+STORE -> STORE : already written? then ignore it
+STORE -[#1DA34A]> HK : one sample, over its own span
+
+alt store sealed or not authorised
+  HK --> STORE : errorDatabaseInaccessible
+  STORE -> STORE : keep it, stop draining
   note right of STORE
     Retried on the next push, on unlock, on an
-    authorisation change, and on foreground.
+    authorisation change, and on foreground. The
+    watch forgot it the moment the radio confirmed,
+    so dropping it would lose it outright.
   end note
 end
 
-== When the day pushes stop ==
+== The absolute, which writes nothing ==
 
-BC -> BC : 20 minutes without a day
-BC -> SVC : sync, as a probe
-BC -> BC : 25 minutes without a day
-BC -[#B23A34]> SVC : drop the connection
-note over BC, SVC
-  Reconnecting forces a fresh discovery and a fresh
-  CCCD write, which is what the watch is waiting for.
+SVC -[#8E8E93]> BC : day: the total, and what the belt delivered
+BC -> STORE : the tiles, the resting rate, and the audit
+note right of STORE
+  ours < delivered is a write Health refused.
+  delivered < the watch's total is a delivery
+  that never arrived, and has no repair.
 end note
 @enduml

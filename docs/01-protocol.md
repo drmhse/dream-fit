@@ -70,7 +70,7 @@ Any inbound write doubles as a sync request: the watch answers every
 message with a fresh `day` push, so the phone re-asks with a bare
 `{"t":"sync"}` after reconnects and restores.
 
-## Deltas carry the span, absolutes carry the count
+## The deltas are the measurement
 
 `day` says how much the watch has counted; it does not say when any of it
 happened, because `STEPS_DAILY` and its siblings cover "start of day to now".
@@ -87,11 +87,20 @@ message and then one HealthKit sample over exactly that span. `k` is `steps`,
 `dist` or `floors`, `v` is the value in the same units as the matching `day`
 field, and `s` and `e` are epoch milliseconds.
 
-The two are not rivals. The deltas place the samples; the absolute audits the
-total, and corrects only once the delta stream for that type has been quiet for
-three minutes, because in flight the two views disagree by construction: a
-shortfall written while a delta is still arriving is double counted, and a
-rewrite discards the spans the deltas placed.
+Health Services publishes one such point *per step*. Measured on 2026-09-08: a
+47-second walk produced 47 `STEPS` points of value 1.0, about 400 ms apart. So
+the deltas are not a placement hint for a number the absolute owns. They are
+the whole measurement, and the absolute is a second view of the same stream.
+
+**Only the deltas write to HealthKit.** The absolute drives the watch bezel,
+the phone's tiles and the audit, and nothing else.
+
+It used to correct the mirror by difference, and that was the worst defect this
+bridge has had. The two views disagree constantly in flight, so every
+correction wrote steps the delta lane had already placed. One morning's Health
+log showed a column of forty-seven single-step rows with a single 1,182-step
+row on top of them, and 1,182 was exactly the day's total minus what the belt
+had so far delivered.
 
 ### A delta is the one message that cannot be re-sent from scratch
 
@@ -100,23 +109,43 @@ freshness. A delta is neither: Health Services publishes it once and keeps no
 history — its whole client is seven methods, none of which reads the past — so
 the watch is the only place it exists.
 
-It is therefore written to storage the moment it arrives, and drained only to a
-link that has a subscriber. A batch is forgotten when the radio reports its
-queue emptied cleanly, and returned to the front of the queue when the radio
-reports a discard, when the last subscriber goes, or when the process restarts
-while a batch was outstanding. That makes a disconnection cost latency rather
-than data, which the absolute-only protocol achieved by making the loss
-tolerable instead of impossible.
+It is therefore appended to a log on disk the moment it arrives, and drained
+only to a link that has a subscriber. The log is append-only and rewritten only
+when a window is confirmed: re-serialising the whole queue per delta is
+unnoticeable at four entries and unusable at a day's worth.
+
+Delivery goes out in windows of 64 messages. The link chunks each message to
+the MTU and discards its entire backlog past 512 chunks, so handing it a day's
+queue in one burst overflowed, returned the batch, and burst again — forever. A
+window is forgotten when the radio reports its queue emptied cleanly, and
+returned to the front when the radio reports a discard, when the last
+subscriber goes, or when the process restarts while a window was outstanding.
+
+Confirming a window is also what releases the next, so a backlog walks out at
+roughly 64 messages a second. Measured: 800 queued messages delivered in
+thirteen full windows and a remainder, in twelve seconds, with nothing
+returned.
 
 Confirmation can still be lost after the data landed, so delivery is
 at-least-once and the phone makes it idempotent: a delta is identified by its
 kind and its exact span, unique by construction, and one already written is
-ignored. No acknowledgement travels back, and none is needed.
+ignored. No acknowledgement travels back, and none is needed. That dedupe set
+is persisted, and has to be read back the way it is written — read with
+`stringArray` against a JSON `Data` value, it came back empty on every launch
+and every resend was written a second time.
 
-The queue holds 1,000 deltas, roughly a day of movement, because a queue that
-grows without limit is a slower failure than a dropped delta. Overflowing it
-costs sample placement rather than the count, since the absolute still notices
-the shortfall.
+Contiguous points of one kind are merged on the watch, up to five minutes.
+Without that a walk is one Apple Health row per step. With it, a 97-step walk
+is two rows: the walk itself, and the one step taken during the nineteen idle
+minutes before it, which the five-minute ceiling correctly refuses to fold into
+the walk.
+
+The queue holds 5,000 messages, because a queue that grows without limit is a
+slower failure than a dropped delta. At one merged entry per passive batch that
+is comfortably a day; the 1,000 it held before was about fifteen minutes of
+walking, once the per-step publish rate was measured. Overflowing it now costs
+the count outright. There is no second lane to notice the shortfall, and the
+audit reports it rather than repairing it.
 
 ## Link liveness
 
@@ -156,24 +185,32 @@ carries the watch's own local date, so the phone never has to guess a day
 boundary from its own clock or from UTC. It is sent on subscribe, on any
 change (1s debounce), and on a 15-minute heartbeat.
 
-The phone treats HealthKit as a *mirror* to reconcile against that total, not
-as an accumulator:
+The phone does not reconcile against that total. HealthKit holds exactly what
+the belt delivered, and nothing else:
 
 - reads and writes are scoped to Dream Fit's own samples, so the iPhone's
   pocket pedometer is never read into our sum nor destroyed by our deletes
-- mirror below truth → write the difference
-- mirror above truth → delete our samples for that day and rewrite the total
+- every delivered delta and beat is written once, over its own span
+- a write HealthKit refuses is kept and retried, because the watch has already
+  forgotten it
 
-That makes repeats, out-of-order delivery, reconnects and external edits all
-self-healing, with no deltas, baselines or migrations to maintain.
+The watch records what the radio confirmed — a delivered count and a watermark,
+per kind — and carries both in every `day` push. Nothing depends on those
+figures. They exist so the audit can separate a delivery that never arrived
+from a write Health refused: ours below delivered is the phone's fault,
+delivered below the watch's total is the belt's.
 
-### When the mirror cannot run
+Each `day` push also carries `inc`, the bridge's incarnation, minted per
+service lifetime. The watch is supervised and comes straight back from a crash,
+which without `inc` looks to the phone like an ordinary push.
 
-Reconciling needs two things the phone does not always have: permission to
-write steps, and an unlocked device — HealthKit's store is sealed while the
-phone is locked, which is where a phone spends most of its day. A `day` that
-cannot be mirrored right now is therefore **queued, never dropped**, and
-retried on all four of the events that can change the answer:
+### When HealthKit cannot be written
+
+Writing needs two things the phone does not always have: permission for the
+type, and an unlocked device — HealthKit's store is sealed while the phone is
+locked, which is where a phone spends most of its day. A delivery that cannot
+be written right now is therefore **kept, never dropped**, and retried on all
+four of the events that can change the answer:
 
 - the next `day` push (at most 15 minutes away, by the heartbeat)
 - `protectedDataDidBecomeAvailable` — the phone was unlocked
@@ -195,8 +232,19 @@ Every HealthKit failure is written to the in-app diagnostics log (five taps on
 the status capsule), because a mirror that fails invisibly is indistinguishable
 from one that was never wired up.
 
-`hr` is live telemetry, not an aggregate — throttled to 5s, saved as samples,
-and never summed into anything. `rhr` is the day's lowest 10-minute HR minimum.
+`hr` carries a `bpm` and, when it is a measurement rather than a live readout,
+an `at` in epoch milliseconds. A beat with no `at` is the watch's live tile:
+shown on the phone, never filed. A beat with one rides the same belt as the
+deltas and is written at the minute it was taken, which is what lets a day's
+worth arrive hours late and still land in the right place. Before that, beats
+were stamped on arrival and were not queued at all, so a day apart lost every
+one of them.
+
+Ambient heart rate arrives at roughly thirty readings a minute — 359 readings
+in one 11.5-minute batch, measured. All of them reach `DayLog`, which needs the
+resolution for the resting-rate quorum. One per minute reaches the belt: the
+median of that minute, carried at the time that particular reading was taken,
+so it is an observation rather than an average of one. `rhr` is the day's lowest 10-minute HR minimum.
 `dist` is metres and
 `floors` a count; both are Health Services daily aggregates and follow the same
 rules as `steps`.

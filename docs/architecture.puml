@@ -10,7 +10,9 @@ package "Pixel Watch 4 · Wear OS" as W {
   component "Health Services · passive\nsteps · distance · floors\nheart rate · activity state" as HS <<ext>>
   component "Health Services · MeasureClient\nlive heart rate, while watched" as SENS <<ext>>
   component "off-body sensor\nworn or not" as OFFBODY <<ext>>
-  component "DayLog\nsteps · distance · floors\nresting HR · exercise" as DAYLOG <<watch>>
+  component "DayLog\nsteps · distance · floors\nresting HR · delivered ledger" as DAYLOG <<watch>>
+  component "DeltaQueue\nappend-only log · 64-msg window\nheld until the radio confirms" as DQ <<watch>>
+  component "BootReceiver\nBOOT_COMPLETED" as BOOT <<watch>>
   component "SleepLog\nthe night, gated on the wrist" as SLEEPLOG <<watch>>
   component "BridgeService\nlifecycle · orchestration" as SVC <<watch>>
   component "GattLink\nGATT server · flow control" as LINK <<watch>>
@@ -19,10 +21,14 @@ package "Pixel Watch 4 · Wear OS" as W {
   component "DreamFitScreen" as WUI <<watch>>
 
   HS -[#1DA34A]-> DAYLOG : absolute totals, ambient hr
+  HS -[#1DA34A]-> DQ : deltas, one per step\nmerged to 5 min · beats, 1/min
   HS -[#1DA34A]-> SLEEPLOG : asleep / awake
+  BOOT -[#8E8E93]-> SVC : start after a reboot
   OFFBODY -[#BF5AF2]-> SLEEPLOG : gates every session
   SENS -[#B23A34]-> SVC : live heart rate
   DAYLOG -[#1DA34A]-> SVC : day record
+  DQ -[#1DA34A]-> SVC : one window
+  SVC -[#1DA34A]-> DAYLOG : confirmed, write it off
   SLEEPLOG -[#BF5AF2]-> SVC : closed night
   DAYLOG -[#8E8E93]-> WUI
   SVC -[#8E8E93]-> LINK : send
@@ -34,18 +40,19 @@ package "Pixel Watch 4 · Wear OS" as W {
 
 package "iPhone · iOS" as P {
   component "BridgeCentral\nLinkPhase state machine" as BC <<phone>>
-  component "HealthMirror + HealthKitSink\ndiff · queue · retry" as STORE <<phone>>
+  component "HealthMirror + HealthKitSink\none writer · dedupe · retry" as STORE <<phone>>
   component "HealthStore\npublished facts" as MODEL <<phone>>
   component "ContentView\nring · chart · sleep · tiles" as UI <<phone>>
   component "Apple Health" as HK <<ext>>
   component "iOS ANCS" as IOSANCS <<ext>>
 
-  BC -[#0A6ED1]-> MODEL : hr · day · sleep
-  MODEL -[#0A6ED1]-> STORE : queue
-  STORE -[#0A6ED1]-> HK : read own samples,\nwrite the difference
+  BC -[#0A6ED1]-> MODEL : delta · hr · day · sleep
+  MODEL -[#0A6ED1]-> STORE : deliveries
+  STORE -[#0A6ED1]-> HK : write each once,\nover its own span
+  STORE -[#8E8E93,dashed]-> HK : read own samples\nfor the audit only
   MODEL <-[#8E8E93]-> UI : facts / step goal
 }
 
-LINK <-[#0A6ED1,thickness=3]-> BC : **encrypted GATT**\nhr, day, sleep / sync, goal
+LINK <-[#0A6ED1,thickness=3]-> BC : **encrypted GATT**\ndelta, hr, day, sleep / sync, goal
 IOSANCS -[#8E8E93,dashed]-> TRAY : ANCS
 @enduml

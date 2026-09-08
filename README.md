@@ -17,15 +17,17 @@ central, and daily health data flows as absolute, idempotent messages.
   JSON, flow-controlled in both directions, and gated on an encrypted,
   MITM-protected link. Full contract: `docs/01-protocol.md`
   (canonical definition: `wear/…/BridgeGatt.kt`).
-- **Data model:** the **watch owns every daily aggregate**, and movement is
-  reported twice over on purpose: `delta` messages carry the span each interval
-  of steps, distance or floors happened in, so Apple Health can merge them
-  against the iPhone's own reading of the same walk, and `day` messages are
-  absolute (`steps`, distance, floors, resting HR, battery + the watch's own
-  local date), sent on subscribe, on change (debounced) and on a 15-minute
-  heartbeat. The phone treats HealthKit as a mirror to reconcile against that
-  total — never as an accumulator — so repeats, reconnects and out-of-order
-  delivery are self-healing. `hr` is live telemetry (5 s throttle), never summed.
+- **Data model:** the **watch owns every daily aggregate**, and one lane writes
+  to Apple Health. `delta` messages carry the span each interval of steps,
+  distance or floors happened in — Health Services publishes one per step, so
+  they are the measurement rather than a hint about it — and timestamped `hr`
+  messages carry one median reading per minute. Both ride a durable queue that
+  survives a day with nobody listening. `day` messages are absolute (`steps`,
+  distance, floors, resting HR, battery, the watch's own local date, what the
+  belt has delivered, and the bridge's incarnation), sent on subscribe, on
+  change (debounced) and on a 15-minute heartbeat. They drive the screens and
+  the audit; they never write to HealthKit. Having both lanes write is what
+  made the same steps land twice.
 - **Phone → watch:** app notifications (`notify`), the user's daily step goal
   (`goal`, which drives the watch bezel as well as the phone ring) and an
   explicit re-sync request (`sync`). Separately, a complete `AncsClient` puts
@@ -113,10 +115,11 @@ from the same step.
 Working: encrypted BLE link (an explicit state machine with deadlines on the
 iPhone, scheduled re-burst on the watch), foreground-persistent watch service,
 iPhone notifications on the wrist over ANCS with answer/decline for calls,
-in-app notify → watch notification, HR + absolute daily aggregates, HealthKit
-mirror in both directions (queued and retried when the phone is locked, denied
-or relaunched in the background), a step goal you set on the phone that drives
-both screens, light/dark iPhone UI. Next: media control (AMS client); Google
+in-app notify → watch notification, timestamped heart rate and movement written
+to Apple Health from one queue (kept and retried when the phone is locked,
+denied or relaunched in the background, and restarted with the watch after a
+reboot), a step goal you set on the phone that drives both screens, light/dark
+iPhone UI. Next: media control (AMS client); Google
 sign-in for Calendar/Gmail/Weather. Honest ledger, including what is
 impossible (eSIM, Wallet, Play installs, Fitbit-cloud sync): `docs/04-parity.md`.
 If a number looks wrong, `docs/05-troubleshooting.md` names the three different
@@ -126,9 +129,10 @@ step counts and how to tell which one is lying.
 
 Your health data never leaves your devices: watch → your iPhone over BLE →
 Apple Health on that same iPhone. No accounts, no cloud sync, no analytics.
-The HealthKit mirror is scoped to Dream Fit's own samples, so it neither
+What this app writes to HealthKit is scoped to its own samples, so it neither
 reads your iPhone's pocket pedometer nor touches other apps' data, and the
-watch keeps only the current day's aggregates in local storage.
+watch keeps only the current day's aggregates and its undelivered queue in
+local storage.
 
 The link is encrypted. Every characteristic requires an encrypted,
 MITM-protected connection, so the watch refuses to be read, written or

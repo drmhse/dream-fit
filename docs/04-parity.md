@@ -6,10 +6,12 @@ Goal: Pixel Watch 4 on iPhone feeling like Pixel 9 + Watch. Honest ledger.
 - BLE link (custom GATT 6E400001, encrypted + MITM-gated, LOW_POWER, adv-off-while-subscribed, backoff reconnect on iPhone + scheduled re-burst on watch)
 - Foreground-persistent watch service (immune to app-idle kill)
 - In-app notify → visible watch notification; full ANCS client beyond that (see below)
-- HR (5s throttle) event-driven; daily aggregates pushed as absolutes
-- Watch is sole authority for daily totals; HealthKit reconciles to it in both
-  directions, and a reconcile that cannot run right now is queued and retried
-  rather than dropped (see `01-protocol.md`)
+- Live HR event-driven (5s throttle) for the tile; ambient HR filed as one
+  median reading per minute, carried at the time it was measured
+- Watch is sole authority for daily totals, and the only lane that writes to
+  HealthKit is the delta belt: movement and beats, each over its own span. A
+  write that cannot run right now is kept and retried rather than dropped, and
+  the belt holds a day's backlog across a disconnection (see `01-protocol.md`)
 - Flow-controlled notify/write queues and bounded reassembly buffers on both ends
 - iPhone UI: step-goal ring, live HR chart, actionable permission banners,
   light/dark verified in the simulator

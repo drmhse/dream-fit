@@ -77,12 +77,19 @@ The 13:28 and 13:29 rows are also the queue working: `ours` sat at 213 while the
 watch had counted 2073, because the phone was locked and HealthKit's store is
 sealed then, and it caught up within a second of the phone being unlocked.
 
-The mirror's own reconcile is deliberately not merged: `mySum` scopes to
-`HKSource.default()`, because the diff has to be computed against what this app
-wrote rather than against a figure another source contributed to.
+`mySum` scopes to `HKSource.default()`, because the audit compares what this
+app wrote against what the watch counted, not against a figure another source
+contributed to. It is a reading, not a correction: nothing writes steps on the
+strength of it.
 
-Do not compare against the iPhone's own step count to decide whether the
-mirror ran: a phone left on a desk correctly reports zero steps of its own.
+The audit line also prints `delivered [...]`, the watch's own ledger of what
+the radio confirmed. That is what tells the two failures apart. `ours` below
+`delivered` means the phone did not write what it was given. `delivered` below
+the watch's total means the belt never carried it — and that second one has no
+repair, because Health Services publishes a delta once and keeps no history.
+
+Do not compare against the iPhone's own step count to decide whether the bridge
+ran: a phone left on a desk correctly reports zero steps of its own.
 
 ## Nothing connects at all, on either side
 
@@ -106,7 +113,17 @@ adb shell run-as com.drmhse.dream.fit \
   cat /data/data/com.drmhse.dream.fit/shared_prefs/dreamfit.xml
 ```
 
-`day` is `date|steps|rhr|distanceM|floors`, and `sleep` is
+`day` is `date|steps|rhr|distanceM|floors` followed by a delivered count and
+watermark per kind, in the order steps, distance, floors. The undelivered queue
+is a separate append-only log, one JSON message per line:
+
+```
+adb shell run-as com.drmhse.dream.fit \
+  wc -l /data/data/com.drmhse.dream.fit/files/deltas.log
+```
+
+A non-zero count with the phone connected means the drain is stuck; the log
+prints `draining N, M behind` per window. `sleep` is
 `start|end|openedAt` in epoch milliseconds — `openedAt` non-zero means a sleep
 session is open right now. A record with a different field count is from an
 older version and is ignored rather than migrated; the next aggregate refills
@@ -120,8 +137,12 @@ this project.
 sit behind your actual step count until the next aggregate lands. That lag is
 deliberate: the hardware step counter used to paper over it, and reading a
 sensor to second-guess a number the platform already reports is what this app
-no longer does. Steps taken while the service was down are recovered by the
-next aggregate, since the aggregate is absolute rather than incremental.
+no longer does. Steps taken while the service was down are **not** recovered. The watch's own
+total catches up, because the aggregate is absolute, but the deltas that would
+have placed them in Apple Health were published once to nobody and are gone.
+The audit shows the gap as `delivered` far below the watch's total. This is the
+cost of having one writer, and it is why the bridge restarts itself on boot
+rather than waiting to be opened.
 
 ## The watch says `searching` and the phone shows stale data
 

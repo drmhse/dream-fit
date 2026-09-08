@@ -41,19 +41,46 @@ Liveness is counted in `day` messages, not in bytes — heart rate arrives every
 Dropping is the point: reconnecting forces a fresh discovery and a fresh CCCD
 write, which is the part the watch is waiting for.
 
-## iPhone — the Health mirror (`HealthMirror`)
+## Watch — coming back
+
+`START_STICKY` restarts a service whose *process* died. It does nothing across
+a device reboot, so before `BootReceiver` existed a restarted watch collected
+nothing until somebody opened the app — one reboot cost about 1,280 steps that
+no later message could recover. The receiver starts `BridgeService` on
+`BOOT_COMPLETED`, which the platform allows as a foreground start under its own
+exemption:
+
+```
+adb shell dumpsys activity services com.drmhse.dream.fit
+  intent={act=dreamfit.BOOT ...}
+  infoAllowStartForeground=[... code:BOOT_COMPLETED ... BFGS denied: false]
+  isForeground=true
+```
+
+That is the check worth running after a reboot, because the boot log itself
+rotates out of logcat within minutes on this watch.
+
+## iPhone — the Health writer (`HealthMirror`)
 
 | State | Means |
 |---|---|
 | idle | nothing outstanding |
-| queued | a `day` is waiting for a condition that is not met yet |
-| reconciling | a read-diff-write pass is in flight |
-| settling | a delta arrived inside the last three minutes, so the absolute and the samples disagree by construction and neither is corrected |
+| unwritten | deliveries HealthKit has not accepted yet, in arrival order |
+| draining | writing them out, one at a time |
 
-A day that cannot be mirrored is queued, never dropped, and retried on the next
-push, on device unlock, on an authorisation change, and on foreground. One pass
-at a time, because HealthKit is append-only and two interleaved passes would
-each diff against the same stale sum. Sleep is queued by the same rule and for
+Each delivered delta and beat is written once, over its own span, and a
+delivery HealthKit refuses is kept and retried on the next push, on device
+unlock, on an authorisation change, and on foreground. Keeping it is not
+optional: the watch forgets a delivery the moment the radio confirms it, so
+dropping one loses it outright.
+
+Draining is serial and stops at the first failure rather than skipping past it,
+because the usual failure is a sealed store and the next write would fail the
+same way. A type the user has denied is the exception — its deliveries are
+discarded rather than held, or they would stall every other type behind them.
+
+There is no read-diff-write pass any more, and no settle window. The daily
+absolute does not write. Sleep is queued by the same rule and for
 the same reason: what the watch said and what Apple Health holds are tracked
 separately, or a night dropped while the phone was locked would look like a
 record we already had and never be retried.
